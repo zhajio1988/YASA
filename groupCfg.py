@@ -45,6 +45,40 @@ class groupSubCfg(includableCfg):
     def _parseTests(self):
         for test in self._buildInOpts['tests']:
             print("debug point test", test)
+            testList = test.split("-")
+            print(testList)
+            if testList[1:]:
+                self._getTestArgs(testList[1:])
+                #for i in testList[1:]:
+                #    print(i.strip().split(" ")[0])
+            else:
+                testList.append(self.argsOption)
+                index = self._buildInOpts['tests'].index(test)
+                self._buildInOpts['tests'].pop(index)
+                self._buildInOpts['tests'].insert(index, " ".join(testList))
+                print(self._buildInOpts['tests'])
+
+    def _getTestArgs(self, testArgs):
+        append = False
+        #print("debug point j", self.argsOption)
+        argsList = [i for i in self.argsOptionList if i != '']
+        #print("debug point j", argsList)
+        for j in argsList:
+            j = j.strip().split(" ")
+            print("debug point j", j)
+
+            for i in testArgs:
+                i = i.strip().split(" ")
+                print("debug point i", i)
+                if len(j) == len(i):
+                    if len(j) != 1:
+                        if j[0] == i[0]:
+                            append = False
+                            break
+                    else:
+                        if j != i[0]:
+                            print("debug point j[1]", j)
+
 
     @property
     def buildOption(self):
@@ -53,6 +87,10 @@ class groupSubCfg(includableCfg):
     @property
     def argsOption(self):
         return self._buildInOpts['args']
+
+    @property
+    def argsOptionList(self):
+        return self.argsOption.strip().split("-")
 
     @property
     def testsOption(self):
