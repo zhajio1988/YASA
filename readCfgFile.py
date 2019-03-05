@@ -36,6 +36,8 @@ class readGroupCfgFile(readCfgFileBase):
         super(readGroupCfgFile, self).__init__('readGroupCfgFile', file)
         self._subSectionType = {'testgroup': groupCfg}
         self.parse()
+        self.validBuild = []
+        self._tests = {}
 
     @property
     def testGroup(self):
@@ -44,39 +46,43 @@ class readGroupCfgFile(readCfgFileBase):
 
 
     def getTests(self, groupName):
-        validBuild = [];
         groupSection = self.testGroup.getGroup(groupName)
         globalBuild = groupSection.buildOption
         globalArgs = groupSection.argsOption
         globalTests = groupSection.testsOption
-        print('11', globalBuild)
+        print('1', globalBuild)
         print(groupSection.argsOption)
         print(groupSection.testsOption)
         print(groupSection.include)
+        if globalBuild:
+            self.validBuild.append(globalBuild)
+        if globalTests:
+            self._tests[groupName] = globalTests
         if groupSection.include:
             print('debug point has include')
             for incGroup in groupSection.incGroups:
-                print(incGroup.buildOption)
+                print('11', incGroup.buildOption)
                 print(incGroup.argsOption)
                 print(incGroup.testsOption)
-                print("1", incGroup.include)
-                if globalBuild and incGroup.buildOption and globalBuild != incGroup.buildOption:
-                    validBuild.append(globalBuild)
-                elif incGroup.buildOption and not globalBuild:
-                    validBuild.append(incGroup.buildOption)
-                elif globalBuild and not incGroup.buildOption:
-                    validBuild.append(globalBuild)
-        else:
-            validBuild.append(globalBuild)
+                if incGroup.testsOption:
+                    self._tests[incGroup.name] = incGroup.testsOption
+                self.setValidBuild(globalBuild, incGroup.buildOption)
 
-        self.checkBuild(validBuild, groupName)
-        print(validBuild)
+        self.checkBuild(self.validBuild, groupName)
 
+    def setValidBuild(self, globalBuild, subBuild):
+        if globalBuild and subBuild and globalBuild != subBuild:
+            self.validBuild.append(globalBuild)
+        elif subBuild and not globalBuild:
+            self.validBuild.append(subBuild)
+        elif globalBuild and not subBuild:
+            self.validBuild.append(globalBuild)
 
     def checkBuild(self, buildList, groupName):
         buildSet = set(buildList)
+        print("debug point valid build", buildSet)
         if len(buildSet) != 1:
-            raise ValueError(('group has included subgroup: %s is must be in same build' % groupName))
+            raise ValueError(('group %s has included subgroup is must be in same build' % groupName))
 
 
 
@@ -89,7 +95,7 @@ if __name__ == '__main__':
 
     config = readGroupCfgFile(defaultGroupFile())
     config.getTests('v1_regr')
-    config.getTests('top_regr')
+    #config.getTests('top_regr')
 
     #for v in config.testgroup.subSection.values():
     #    print(v.include)
