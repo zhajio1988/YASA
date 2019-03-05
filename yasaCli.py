@@ -135,10 +135,9 @@ def _create_argument_parser(description=None, for_documentation=False):
 
     #SIMULATOR_FACTORY.add_arguments(argParser)
     userCliCfg = userCli.userCliCfg()
-    userCliCfg.add_arguments(userCliCfg.usrCliSection(), argParser)
+    userCliCfg.add_arguments(userCliCfg.userCliSection(), argParser)
 
     return argParser
-
 
 def positive_int(val):
     """

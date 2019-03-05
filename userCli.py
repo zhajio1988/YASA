@@ -64,7 +64,7 @@ class userCliCfg(object):
         self.config = ConfigObj(infile=defaultCliCfgFile(), stringify=True)
         self.section = None
 
-    def usrCliSection(self):
+    def userCliSection(self):
         if 'userCli' in self.config:
             self.section = self.config['userCli']
             return self.section
@@ -104,10 +104,10 @@ if __name__ == '__main__':
     import sys
     userCliCfg = userCliCfg()
 
-    #print(vars(userCliCfg.usrCliSection()))
-    #userCliCfg.usrCliSection.walk(userCliCfg.add_arguments())
+    #print(vars(userCliCfg.userCliSection()))
+    #userCliCfg.userCliSection.walk(userCliCfg.add_arguments())
     parser = argparse.ArgumentParser()
-    userCliCfg.add_arguments(userCliCfg.usrCliSection(), parser)
+    userCliCfg.add_arguments(userCliCfg.userCliSection(), parser)
     args = parser.parse_args(sys.argv[1:])
     print(args)
     print(args.prof)
