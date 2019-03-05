@@ -23,10 +23,12 @@ class groupSubCfg(includableCfg):
         self._addOption('tests')
         self._tests = []
 
-#    @property
-#    def groups(self):
-#        for inc in self._include:
-#            for incGroup in inc.groups:
+    @property
+    def incGroups(self):
+        for inc in self._include:
+            for incGroup in inc.incGroups:
+                yield incGroup
+        yield deepcopy(self)
 
     def _readBuildInOption(self):
         super(groupSubCfg, self)._readBuildInOption()

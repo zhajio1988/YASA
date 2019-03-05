@@ -38,11 +38,47 @@ class readGroupCfgFile(readCfgFileBase):
         self.parse()
 
     @property
-    def testgroup(self):
+    def testGroup(self):
         if 'testgroup' in self.subSection:
             return self.subSection['testgroup']
+
+
+    def getTests(self, groupName):
+        validBuild = [];
+        groupSection = self.testGroup.getGroup(groupName)
+        globalBuild = groupSection.buildOption
+        globalArgs = groupSection.argsOption
+        globalTests = groupSection.testsOption
+        print('11', globalBuild)
+        print(groupSection.argsOption)
+        print(groupSection.testsOption)
+        print(groupSection.include)
+        if groupSection.include:
+            print('debug point has include')
+            for incGroup in groupSection.incGroups:
+                print(incGroup.buildOption)
+                print(incGroup.argsOption)
+                print(incGroup.testsOption)
+                print("1", incGroup.include)
+                if globalBuild and incGroup.buildOption and globalBuild != incGroup.buildOption:
+                    validBuild.append(globalBuild)
+                elif incGroup.buildOption and not globalBuild:
+                    validBuild.append(incGroup.buildOption)
+                elif globalBuild and not incGroup.buildOption:
+                    validBuild.append(globalBuild)
         else:
-            print("none exists")
+            validBuild.append(globalBuild)
+
+        self.checkBuild(validBuild, groupName)
+        print(validBuild)
+
+
+    def checkBuild(self, buildList, groupName):
+        buildSet = set(buildList)
+        if len(buildSet) != 1:
+            raise ValueError(('group has included subgroup: %s is must be in same build' % groupName))
+
+
 
 if __name__ == '__main__':
     #config = readBuildCfgFile(defaultBuildFile())
@@ -52,9 +88,12 @@ if __name__ == '__main__':
     #print(config.build.getBuild('dla_fpga').name)
 
     config = readGroupCfgFile(defaultGroupFile())
-    for v in config.testgroup.subSection.values():
-        print(v.include)
-        print(v.name)
+    config.getTests('v1_regr')
+    config.getTests('top_regr')
+
+    #for v in config.testgroup.subSection.values():
+    #    print(v.include)
+    #    print(v.name)
         #print(v.buildOption)
         #print(v.argsOption)
         #print(v.testsOption)
