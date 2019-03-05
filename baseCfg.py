@@ -62,7 +62,7 @@ class baseCfg(object):
         for k,v in getKeyWords(self._section).items():
             #print("debug point2", k, v)
             if self._checkKeyWord(k) :
-                print("debug point3", k, v)
+                #print("debug point3", k, v)
                 self._buildInOpts[k] = v #" ".join(v) if isinstance(v, list) else v
                 #print(self.buildInOption.keys())
 
@@ -76,20 +76,25 @@ class includableTopCfg(baseCfg):
         super(includableTopCfg, self).__init__(name, section, parent)
         self._subSectionType = includableCfg
 
-    def _readBuildInOption(self):
-        for k, v in getKeyWords(self._section).items():
-            print("debug point2", k, v)
-            if self._checkKeyWord(k):
-                self._buildInOpts[k] = v
-                #handlePlusEq(self._buildInOption[k])
+    #def _readBuildInOption(self):
+    #    for k, v in getKeyWords(self._section).items():
+    #        print("debug point2", k, v)
+    #        if self._checkKeyWord(k):
+    #            self._buildInOpts[k] = v
+    #            #handlePlusEq(self._buildInOption[k])
 
     def parse(self):
         super(includableTopCfg, self).parse()
         for subSection in self._subSection.values():
             #handlePlusEq(subSection.include)
-            for incName in subSection.include:
-                print("debug point0", incName)
-                subSection.addInclude(self._subSection[incName])
+            if not isinstance(subSection.include, list):
+                for incName in [subSection.include]:
+                    #print("debug point0", incName)
+                    subSection.addInclude(self._subSection[incName])
+            else:
+                for incName in subSection.include:
+                    #print("debug point1", incName)
+                    subSection.addInclude(self._subSection[incName])
 
 class includableCfg(baseCfg):
     def __init__(self, name, section, parent=None):
