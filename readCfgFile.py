@@ -31,6 +31,31 @@ class readBuildCfgFile(readCfgFileBase):
         if 'build' in self.subSection:
             return self.subSection['build']
 
+    def compileOption(self, buildName):
+            return self.build.getBuild(buildName).compileOption + self.build.compileOption if self.build.compileOption else self.build.getBuild(buildName).compileOption
+
+    def simOption(self, buildName):
+        return self.build.getBuild(buildName).simOption + self.build.simOption if self.build.simOption else self.build.getBuild(buildName).simOption
+
+    def preCompileOption(self, buildName):
+        return self._toList(self.build.getBuild(buildName).preCompileOption) + self._toList(self.build.preCompileOption)
+
+    def preSimOption(self, buildName):
+        return self._toList(self.build.getBuild(buildName).preSimOption) + self._toList(self.build.preSimOption)
+
+    def postCompileOption(self, buildName):
+        return self._toList(self.build.getBuild(buildName).postCompileOption) + self._toList(self.build.postCompileOption)
+
+    def postSimOption(self, buildName):
+        return self._toList(self.build.getBuild(buildName).postSimOption) + self._toList(self.build.postSimOption)
+
+    def _toList(self, preOptions):
+        if isinstance(preOptions, str):
+            return [preOptions]
+        elif isinstance(preOptions, list):
+            return preOptions
+
+
 class readGroupCfgFile(readCfgFileBase):
     def __init__(self, file):
         super(readGroupCfgFile, self).__init__('readGroupCfgFile', file)
@@ -80,15 +105,21 @@ class readGroupCfgFile(readCfgFileBase):
             raise ValueError(('group %s has included subgroup is must be in same build' % groupName))
 
 if __name__ == '__main__':
-    #config = readBuildCfgFile(defaultBuildFile())
-    #print(config.build.simOption)
-    #print(config.build.compileOption)
-    #print(config.build.getBuild('').name)
-    #print(config.build.getBuild('dla_fpga').name)
+    config = readBuildCfgFile(defaultBuildFile())
+    print(config.build.simOption)
+    print(config.build.compileOption)
+    print(config.build.getBuild('dla_fpga').name)
+    print(config.build.getBuild('dla_fpga').compileOption)
+    print(config.simOption('dla_fpga'))
+    print(config.preCompileOption('dla_fpga'))
+    print(config.postCompileOption('dla_fpga'))
+    print(config.preSimOption('dla_fpga'))
+    print(config.postSimOption('dla_fpga'))
 
-    config = readGroupCfgFile(defaultGroupFile())
-    config.getTests('v1_regr')
-    config.getTests('top_regr')
+
+    #config = readGroupCfgFile(defaultGroupFile())
+    #config.getTests('v1_regr')
+    #config.getTests('top_regr')
 
     #for v in config.testgroup.subSection.values():
     #    print(v.include)
