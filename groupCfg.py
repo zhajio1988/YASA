@@ -44,41 +44,52 @@ class groupSubCfg(includableCfg):
 
     def _parseTests(self):
         for test in self._buildInOpts['tests']:
-            print("debug point test", test)
+            appendArgs = []
+            #print("debug point test", test)
             testList = test.split("-")
-            print(testList)
+            testArgs = test.split(" ")[1:]
+            #print('22', testArgs)
             if testList[1:]:
-                self._getTestArgs(testList[1:])
-                #for i in testList[1:]:
-                #    print(i.strip().split(" ")[0])
+                self._getTestArgs(testList[1:], appendArgs)
+                #print("debug point appendArgs1", appendArgs)
+                testArgs.append(" ".join(['-'+ x for x in appendArgs]))
+                #print("debug point testArgs1", testArgs)
+                index = self._buildInOpts['tests'].index(test)
+                self._buildInOpts['tests'].pop(index)
+                self._buildInOpts['tests'].insert(index, testList[0] + " ".join(testArgs))
             else:
                 testList.append(self.argsOption)
                 index = self._buildInOpts['tests'].index(test)
                 self._buildInOpts['tests'].pop(index)
                 self._buildInOpts['tests'].insert(index, " ".join(testList))
-                print(self._buildInOpts['tests'])
+            #print(self._buildInOpts['tests'])
 
-    def _getTestArgs(self, testArgs):
-        append = False
-        #print("debug point j", self.argsOption)
-        argsList = [i for i in self.argsOptionList if i != '']
+    def _getTestArgs(self, testArgs, appendArgs):
+        append = True
+        argsList = [i.strip() for i in self.argsOptionList if i != '']
         #print("debug point j", argsList)
         for j in argsList:
             j = j.strip().split(" ")
-            print("debug point j", j)
-
+            #print("debug point j", j)
             for i in testArgs:
                 i = i.strip().split(" ")
-                print("debug point i", i)
-                if len(j) == len(i):
-                    if len(j) != 1:
+                if len(i) > 1:
+                    if len(j) >1:
                         if j[0] == i[0]:
                             append = False
                             break
-                    else:
-                        if j != i[0]:
-                            print("debug point j[1]", j)
-
+                    elif len(j) == 1:
+                        append = True
+                elif len(i) == 1:
+                    if len(i) == 1:
+                        if j == i:
+                            append = False
+                            break
+                    elif len(j) > 1:
+                        append = True
+            if append:
+                appendArgs.append(" ".join(j))
+                #print("debug point appendArgs", appendArgs)
 
     @property
     def buildOption(self):
