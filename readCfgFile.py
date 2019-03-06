@@ -104,17 +104,17 @@ class readGroupCfgFile(readCfgFileBase):
         if len(buildSet) != 1:
             raise ValueError(('group %s has included subgroup is must be in same build' % groupName))
 
-if __name__ == '__main__':
-    config = readBuildCfgFile(defaultBuildFile())
-    print(config.build.simOption)
-    print(config.build.compileOption)
-    print(config.build.getBuild('dla_fpga').name)
-    print(config.build.getBuild('dla_fpga').compileOption)
-    print(config.simOption('dla_fpga'))
-    print(config.preCompileOption('dla_fpga'))
-    print(config.postCompileOption('dla_fpga'))
-    print(config.preSimOption('dla_fpga'))
-    print(config.postSimOption('dla_fpga'))
+#if __name__ == '__main__':
+#    config = readBuildCfgFile(defaultBuildFile())
+#    print(config.build.simOption)
+#    print(config.build.compileOption)
+#    print(config.build.getBuild('dla').name)
+#    print(config.build.getBuild('dla').compileOption)
+#    print(config.simOption('dla'))
+#    print(config.preCompileOption('dla'))
+#    print(config.postCompileOption('dla'))
+#    print(config.preSimOption('dla'))
+#    print(config.postSimOption('dla'))
 
 
     #config = readGroupCfgFile(defaultGroupFile())
