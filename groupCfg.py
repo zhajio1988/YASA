@@ -49,7 +49,7 @@ class groupSubCfg(includableCfg):
             testList = test.split("-")
             testArgs = test.split(" ")[1:]
             #print('22', testArgs)
-            if testList[1:]:
+            if testList[1:] and self.argsOption:
                 self._getTestArgs(testList[1:], appendArgs)
                 #print("debug point appendArgs1", appendArgs)
                 testArgs.append(" ".join(['-'+ x for x in appendArgs]))
@@ -57,7 +57,7 @@ class groupSubCfg(includableCfg):
                 index = self._buildInOpts['tests'].index(test)
                 self._buildInOpts['tests'].pop(index)
                 self._buildInOpts['tests'].insert(index, testList[0] + " ".join(testArgs))
-            else:
+            elif self.argsOption:
                 testList.append(self.argsOption)
                 index = self._buildInOpts['tests'].index(test)
                 self._buildInOpts['tests'].pop(index)
@@ -101,7 +101,8 @@ class groupSubCfg(includableCfg):
 
     @property
     def argsOptionList(self):
-        return self.argsOption.strip().split("-")
+        if self.argsOption:
+            return self.argsOption.strip().split("-")
 
     @property
     def testsOption(self):

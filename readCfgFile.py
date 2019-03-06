@@ -36,7 +36,7 @@ class readGroupCfgFile(readCfgFileBase):
         super(readGroupCfgFile, self).__init__('readGroupCfgFile', file)
         self._subSectionType = {'testgroup': groupCfg}
         self.parse()
-        self.validBuild = []
+        self._validBuild = []
         self._tests = {}
 
     @property
@@ -44,14 +44,16 @@ class readGroupCfgFile(readCfgFileBase):
         if 'testgroup' in self.subSection:
             return self.subSection['testgroup']
 
+    @property
+    def validBuild(self):
+        return self._validBuild[0]
 
     def getTests(self, groupName):
         groupSection = self.testGroup.getGroup(groupName)
         globalBuild = groupSection.buildOption
-        globalArgs = groupSection.argsOption
         globalTests = groupSection.testsOption
         if globalBuild:
-            self.validBuild.append(globalBuild)
+            self._validBuild.append(globalBuild)
         if globalTests:
             self._tests[groupName] = globalTests
         if groupSection.include:
@@ -60,22 +62,22 @@ class readGroupCfgFile(readCfgFileBase):
                     self._tests[incGroup.name] = incGroup.testsOption
                 self.setValidBuild(globalBuild, incGroup.buildOption)
 
-        self.checkBuild(self.validBuild, groupName)
+        self.checkBuild(self._validBuild, groupName)
         print(self._tests)
+        return self._tests
 
     def setValidBuild(self, globalBuild, subBuild):
         if globalBuild and subBuild and globalBuild != subBuild:
-            self.validBuild.append(globalBuild)
+            self._validBuild.append(globalBuild)
         elif subBuild and not globalBuild:
-            self.validBuild.append(subBuild)
+            self._validBuild.append(subBuild)
         elif globalBuild and not subBuild:
-            self.validBuild.append(globalBuild)
+            self._validBuild.append(globalBuild)
 
     def checkBuild(self, buildList, groupName):
         buildSet = set(buildList)
         if len(buildSet) != 1:
             raise ValueError(('group %s has included subgroup is must be in same build' % groupName))
-
 
 if __name__ == '__main__':
     #config = readBuildCfgFile(defaultBuildFile())
