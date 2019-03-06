@@ -127,7 +127,7 @@ class buildBaseCfg(baseCfg):
     def simOption(self):
         return self._buildInOpts['sim_option']
 
-    @ property
+    @property
     def preCompileOption(self):
         return self._buildInOpts['pre_compile_option']
 
