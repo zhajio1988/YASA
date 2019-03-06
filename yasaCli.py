@@ -138,7 +138,6 @@ def _create_argument_parser(description=None, for_documentation=False):
     userCliCfg.add_arguments(userCliCfg.userCliSection(), argParser)
 
     return argParser
-
 def positive_int(val):
     """
     ArgumentParse positive int check

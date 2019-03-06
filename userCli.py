@@ -75,10 +75,10 @@ class userCliCfg(object):
         for key in section:
             #print('debug point0 %s' % key)
             #print('debug point1 %s' % section.inline_comments[key])
-            print('debug point2 %s' % section[key].scalars)
-            print('debug point3 %s' % section[key])
-            if isinstance(section[key], Section):
-                print("debug section")
+            #print('debug point2 %s' % section[key].scalars)
+            #print('debug point3 %s' % section[key])
+            #if isinstance(section[key], Section):
+            #    print("debug section")
             self.kwargs = {}
             self.kwargs['dest'] = key
             self.kwargs['action'] = 'store'
