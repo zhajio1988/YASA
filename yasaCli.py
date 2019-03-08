@@ -15,7 +15,8 @@ class yasaCli(object):
         :param description: A custom short description of the command line tool
         """
         self.parser = _create_argument_parser(description)
-
+        self.userCliCfg = userCli.userCliCfg(self.parser)
+        self.userCliCfg.addArguments()
     def parse_args(self, argv=None):
         """
         Parse command line arguments
@@ -134,10 +135,9 @@ def _create_argument_parser(description=None, for_documentation=False):
     argParser.add_argument('-version', action='version', version=version())
 
     #SIMULATOR_FACTORY.add_arguments(argParser)
-    userCliCfg = userCli.userCliCfg()
-    userCliCfg.add_arguments(userCliCfg.userCliSection(), argParser)
 
     return argParser
+
 def positive_int(val):
     """
     ArgumentParse positive int check
@@ -164,4 +164,8 @@ if __name__ == '__main__':
     #print(cli.parse_args(['-h']))
     args = cli.parse_args(sys.argv[1:])
     print(args.sim_option)
+    print(args.wave_name)
+    print(args.prof)
+    print(cli.userCliCfg.compileOption(args))
+    print(cli.userCliCfg.simOption(args))
     print("end")

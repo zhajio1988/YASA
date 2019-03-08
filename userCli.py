@@ -59,58 +59,65 @@ class Option(object):
 
 
 class userCliCfg(object):
-    def __init__(self, options=None, ini_file=None, **kwargs):
-        self.kwargs = kwargs or {}
+    def __init__(self, parser=None, ini_file=None):
+        self.parser = parser
+        self.kwargs = {}
         self.config = ConfigObj(infile=defaultCliCfgFile(), stringify=True)
-        self.section = None
+        self.section = self.userCliSection
 
+    @property
     def userCliSection(self):
         if 'userCli' in self.config:
             self.section = self.config['userCli']
             return self.section
         else:
-            raise AttributeError('userCli section is not in %s' % defaultCliCfgFile())
+            raise AttributeError('userCli section is not defined in %s' % defaultCliCfgFile())
 
-    def add_arguments(self, section, parser):
-        for key in section:
-            #print('debug point0 %s' % key)
-            #print('debug point1 %s' % section.inline_comments[key])
-            #print('debug point2 %s' % section[key].scalars)
-            #print('debug point3 %s' % section[key])
-            #if isinstance(section[key], Section):
-            #    print("debug section")
+    def compileOption(self, args):
+        argsList = []
+        for key in self.section:
+            if hasattr(args, key) and getattr(args, key):
+                for k, v in self.section[key].items():
+                    if 'compile_option' == k:
+                        argsList = argsList + v if isinstance(v, list) else [v]
+        return argsList
+
+    def simOption(self, args):
+        argsList = []
+        for key in self.section:
+            if hasattr(args, key) and getattr(args, key):
+                for k, v in self.section[key].items():
+                    if 'sim_option' == k:
+                        argsList = argsList + v if isinstance(v, list) else [v]
+        return argsList
+
+    def addArguments(self):
+        for key in self.section:
             self.kwargs = {}
             self.kwargs['dest'] = key
-            self.kwargs['action'] = 'store'
-            self.kwargs['nargs'] = '?'
-            if section.inline_comments[key]:
-                self.kwargs['help'] = section.inline_comments[key].lstrip('#')
+            self.kwargs['action'] = 'store_true'
+            if self.section.inline_comments[key]:
+                self.kwargs['help'] = self.section.inline_comments[key].lstrip('#')
             else:
                 self.kwargs['help'] = 'user defined option'
 
-            if isinstance(section[key], dict) and section[key]:
-                #print("%s" % json.dumps(section[key]))
-                self.kwargs['const'] = section[key]
-                #print('debug point dict')
-
-            #print(self.kwargs)
-            val = section[key]
             userCli = Option('-%s' % key)
-            userCli.add_argument(parser, **self.kwargs)
-            #parseKwargs(self, key, , self.kwargs)
+            userCli.add_argument(self.parser, **self.kwargs)
 
 if __name__ == '__main__':
     import argparse
     import sys
-    userCliCfg = userCliCfg()
 
     #print(vars(userCliCfg.userCliSection()))
     #userCliCfg.userCliSection.walk(userCliCfg.add_arguments())
     parser = argparse.ArgumentParser()
-    userCliCfg.add_arguments(userCliCfg.userCliSection(), parser)
+    userCliCfg = userCliCfg(parser)
+    userCliCfg.addArguments()
     args = parser.parse_args(sys.argv[1:])
     print(args)
     print(args.prof)
     print(args.vh)
+    print(args.wave_name)
+    userCliCfg.compileOption(args)
+    userCliCfg.simOption(args)
     #print(args.sim_option)
-
