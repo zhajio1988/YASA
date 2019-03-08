@@ -9,8 +9,6 @@ class baseCfg(object):
         self._subSection = {}
         self._buildInOpts = {}
         self._subSectionType=self.__class__
-        #self._buildInOptsType = ['pre_compile_option','compile_option', 'post_compile_option',
-        #                    'pre_sim_option', 'sim_option', 'post_sim_option']
 
     @property
     def name(self):

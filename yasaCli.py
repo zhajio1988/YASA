@@ -7,7 +7,7 @@ import userCli
 
 class yasaCli(object):
     """
-    VUnit command line interface
+    Yasa command line interface
     """
 
     def __init__(self, description=None):
@@ -36,12 +36,12 @@ def _create_argument_parser(description=None, for_documentation=False):
     :returns: The created :mod:`argparse` parser object
     """
     if description is None:
-        description = 'VUnit command line tool version %s' % version()
+        description = 'Yet another simulation architecture, version %s' % version()
 
     if for_documentation:
-        default_output_path = "./vunit_out"
+        default_output_path = "./yasa_out"
     else:
-        default_output_path = join(abspath(os.getcwd()), "vunit_out")
+        default_output_path = join(abspath(os.getcwd()), "yasa_out")
 
     argParser = argparse.ArgumentParser(description=description)
     group = argParser.add_mutually_exclusive_group()
@@ -115,7 +115,7 @@ def _create_argument_parser(description=None, for_documentation=False):
     argParser.add_argument('-log-level',
                         default="warning",
                         choices=["info", "error", "warning", "debug"],
-                        help=("Log level of VUnit internal python logging. "
+                        help=("Log level of Yasa internal python logging. "
                               "Used for debugging"))
 
     argParser.add_argument('-p', '-num-threads', type=positive_int,
