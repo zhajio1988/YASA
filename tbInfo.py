@@ -2,7 +2,7 @@ import os
 import sys
 from utils import *
 from globals import *
-from readCfgFile import  readGroupCfgFile, readBuildCfgFile
+from readCfgFile import readGroupCfgFile, readBuildCfgFile
 
 
 class flowList(object):
@@ -120,10 +120,10 @@ def show(name):
     getattr(sys.modules[__name__], name + 'list').show()
 
 
-if __name__ == '__main__':
-    tests = testList()
-    tests.getTestList()
-    testlist.setTestLists('default_build', tests)
-    show('test')
-    show('build')
-    show('group')
+#if __name__ == '__main__':
+#    tests = testList()
+#    tests.getTestList()
+#    testlist.setTestLists('default_build', tests)
+#    show('test')
+#    show('build')
+#    show('group')
