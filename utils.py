@@ -18,7 +18,6 @@ def expandDirVar(dir):
         raise EnvironmentError('Environment Var in %s is unknown' % dir)
     return dir
 
-
 def parseKwargs(obj, key ,default, **kwargs):
     if key in kwargs and kwargs[key] != 'default':
         setattr(obj, '_' + key, kwargs[key])

@@ -75,33 +75,47 @@ class userCliCfg(object):
 
     def compileOption(self, args):
         argsList = []
+        keyVar = ''
         for key in self.section:
-            if hasattr(args, key) and getattr(args, key):
+            keyVar = key.replace('$', '') if not key.find('$') else key
+            if hasattr(args, keyVar) and getattr(args, keyVar):
                 for k, v in self.section[key].items():
+                    if '$' in v:
+                        v = v.replace(key, getattr(args, keyVar))
                     if 'compile_option' == k:
                         argsList = argsList + v if isinstance(v, list) else [v]
         return argsList
 
     def simOption(self, args):
         argsList = []
+        keyVar = ''
         for key in self.section:
-            if hasattr(args, key) and getattr(args, key):
+            keyVar = key.replace('$', '') if not key.find('$') else key
+            if hasattr(args, keyVar) and getattr(args, keyVar):
                 for k, v in self.section[key].items():
+                    if '$' in v:
+                        v = v.replace(key, getattr(args, keyVar))
                     if 'sim_option' == k:
                         argsList = argsList + v if isinstance(v, list) else [v]
         return argsList
 
     def addArguments(self):
+        keyVar = ''
+        action = ''
         for key in self.section:
+            if not key.find('$'):
+                self.kwargs['default'] = 'rand'
+            keyVar = key.replace('$', '') if not key.find('$') else key
+            action = 'store' if not key.find('$') else 'store_true'
             self.kwargs = {}
-            self.kwargs['dest'] = key
-            self.kwargs['action'] = 'store_true'
+            self.kwargs['dest'] = keyVar
+            self.kwargs['action'] = action
             if self.section.inline_comments[key]:
-                self.kwargs['help'] = self.section.inline_comments[key].lstrip('#')
+                self.kwargs['help'] = self.section.inline_comments[key].replace('#', '')
             else:
                 self.kwargs['help'] = 'user defined option'
 
-            userCli = Option('-%s' % key)
+            userCli = Option('-%s' % keyVar)
             userCli.add_argument(self.parser, **self.kwargs)
 
 if __name__ == '__main__':
@@ -118,6 +132,6 @@ if __name__ == '__main__':
     print(args.prof)
     print(args.vh)
     print(args.wave_name)
-    userCliCfg.compileOption(args)
-    userCliCfg.simOption(args)
+    print(userCliCfg.compileOption(args))
+    print(userCliCfg.simOption(args))
     #print(args.sim_option)
