@@ -6,7 +6,7 @@ class userCliCfg(object):
     def __init__(self, parser=None, ini_file=None):
         self.parser = parser
         self.kwargs = {}
-        self.args = []
+        self.args = None
         self.config = ConfigObj(infile=defaultCliCfgFile(), stringify=True)
         self.section = self.userCliSection
 
@@ -18,7 +18,11 @@ class userCliCfg(object):
         else:
             raise AttributeError('userCli section is not defined in %s' % defaultCliCfgFile())
 
-    def compileOption(self, args):
+    def setParsedArgs(self, parsedArgs):
+        self.args = parsedArgs
+
+    def compileOption(self):
+        args = self.args;
         argsList = []
         keyVar = ''
         for key in self.section:
@@ -28,10 +32,11 @@ class userCliCfg(object):
                     if '$' in v:
                         v = v.replace(key, getattr(args, keyVar))
                     if 'compile_option' == k:
-                        argsList = argsList + v if isinstance(v, list) else [v]
+                        argsList = argsList + v if isinstance(v, list) else argsList + [v]
         return argsList
 
-    def simOption(self, args):
+    def simOption(self):
+        args = self.args;
         argsList = []
         keyVar = ''
         for key in self.section:
@@ -41,7 +46,7 @@ class userCliCfg(object):
                     if '$' in v:
                         v = v.replace(key, getattr(args, keyVar))
                     if 'sim_option' == k:
-                        argsList = argsList + v if isinstance(v, list) else [v]
+                        argsList = argsList + v if isinstance(v, list) else argsList + [v]
         return argsList
 
     def addArguments(self):
@@ -75,10 +80,11 @@ if __name__ == '__main__':
     userCliCfg = userCliCfg(parser)
     userCliCfg.addArguments()
     args = parser.parse_args(sys.argv[1:])
+    userCliCfg.setParsedArgs(args)
     print(args)
     print(args.prof)
     print(args.vh)
     print(args.wave_name)
-    print(userCliCfg.compileOption(args))
-    print(userCliCfg.simOption(args))
+    print(userCliCfg.compileOption())
+    print(userCliCfg.simOption())
     #print(args.sim_option)

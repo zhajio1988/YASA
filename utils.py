@@ -7,7 +7,7 @@ utils functions
 '''
 
 def createDir(path, force = False):
-    if force:
+    if force and os.path.exists(path):
         shutil.rmtree(path, True)
     if not os.path.exists(path):
         os.makedirs(path)

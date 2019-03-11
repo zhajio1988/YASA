@@ -14,18 +14,30 @@ class yasaCli(object):
         """
         :param description: A custom short description of the command line tool
         """
+        self.parsedArgs = None
         self.parser = _create_argument_parser(description)
         self.userCliCfg = userCli.userCliCfg(self.parser)
         self.userCliCfg.addArguments()
-    def parse_args(self, argv=None):
+
+    def parseArgs(self, argv=None):
         """
         Parse command line arguments
 
         :param argv: Use explicit argv instead of actual command line argument
         :returns: The parsed argument namespace object
         """
-        return self.parser.parse_args(args=argv)
+        self.parsedArgs = self.parser.parse_args(args=argv)
+        self.userCliCfg.setParsedArgs(self.parsedArgs)
+        #return args
 
+    def getParsedArgs(self):
+        return self.parsedArgs
+
+    def userCliCompileOption(self):
+        return self.userCliCfg.compileOption()
+
+    def userCliSimOption(self):
+        return self.userCliCfg.simOption()
 
 def _create_argument_parser(description=None, for_documentation=False):
     """
@@ -123,9 +135,9 @@ def _create_argument_parser(description=None, for_documentation=False):
                         help=('Number of tests to run in parallel. '
                               'Test output is not continuously written in verbose mode with p > 1'))
 
-    argParser.add_argument("-u", "-unique-sim",
+    argParser.add_argument("-u", "-unique_sim",
                         action="store_true",
-                        default=False,
+                        dest='unique_sim',
                         help="Do not re-use the same simulator process for running different test cases (slower)")
 
     argParser.add_argument("-export-json",
@@ -159,13 +171,17 @@ if __name__ == '__main__':
     import sys
 
     cli = yasaCli("Yet another simulation architecture top scripts")
-    #print(cli.parse_args(sys.argv[1:]))
-    #print(vars(cli.parse_args(sys.argv[1:])))
-    #print(cli.parse_args(['-h']))
-    args = cli.parse_args(sys.argv[1:])
+    #print(cli.parseArgs(sys.argv[1:]))
+    #print(vars(cli.parseArgs(sys.argv[1:])))
+    #print(cli.parseArgs(['-h']))
+    cli.parseArgs(sys.argv[1:])
+    args = cli.getParsedArgs()
     print(args.sim_option)
     print(args.wave_name)
     print(args.prof)
-    print(cli.userCliCfg.compileOption(args))
-    print(cli.userCliCfg.simOption(args))
+    print(cli.userCliCfg.compileOption())
+    print(cli.userCliCfg.simOption())
+    print(cli.userCliCompileOption())
+    print(cli.userCliSimOption())
+
     print("end")

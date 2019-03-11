@@ -52,7 +52,7 @@ def defaultReportDir():
     else:
         return os.path.join(defaultWorkPrjDir(), 'report')
 
-def defaultWorkPrjDir():
+def defaultWorkDir():
     # if os.environ['USER'] in grp.getgrnam('sg-ic-ipdv').gr_mem:
     #    return os.path.join('/ic/temp/ipdv', os.environ['USER'], os.path.basename(os.environ['PRJ_HOME']))
     # elif os.environ['USER'] in grp.getgrnam('sg-ic-soc').gr_mem:

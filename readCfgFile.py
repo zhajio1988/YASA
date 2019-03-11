@@ -31,23 +31,27 @@ class readBuildCfgFile(readCfgFileBase):
         if 'build' in self.subSection:
             return self.subSection['build']
 
+    def getBuild(self, build=''):
+        return self.build.getBuild(build)
+
+
     def compileOption(self, buildName):
-            return self.build.getBuild(buildName).compileOption + self.build.compileOption if self.build.compileOption else self.build.getBuild(buildName).compileOption
+            return self.getBuild(buildName).compileOption + self.build.compileOption if self.build.compileOption else self.getBuild(buildName).compileOption
 
     def simOption(self, buildName):
-        return self.build.getBuild(buildName).simOption + self.build.simOption if self.build.simOption else self.build.getBuild(buildName).simOption
+        return self.getBuild(buildName).simOption + self.build.simOption if self.build.simOption else self.getBuild(buildName).simOption
 
     def preCompileOption(self, buildName):
-        return self._toList(self.build.getBuild(buildName).preCompileOption) + self._toList(self.build.preCompileOption)
+        return self._toList(self.getBuild(buildName).preCompileOption) + self._toList(self.build.preCompileOption)
 
     def preSimOption(self, buildName):
-        return self._toList(self.build.getBuild(buildName).preSimOption) + self._toList(self.build.preSimOption)
+        return self._toList(self.getBuild(buildName).preSimOption) + self._toList(self.build.preSimOption)
 
     def postCompileOption(self, buildName):
-        return self._toList(self.build.getBuild(buildName).postCompileOption) + self._toList(self.build.postCompileOption)
+        return self._toList(self.getBuild(buildName).postCompileOption) + self._toList(self.build.postCompileOption)
 
     def postSimOption(self, buildName):
-        return self._toList(self.build.getBuild(buildName).postSimOption) + self._toList(self.build.postSimOption)
+        return self._toList(self.getBuild(buildName).postSimOption) + self._toList(self.build.postSimOption)
 
     def _toList(self, preOptions):
         if isinstance(preOptions, str):
