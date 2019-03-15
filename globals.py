@@ -52,6 +52,13 @@ def defaultReportDir():
     else:
         return os.path.join(defaultWorkPrjDir(), 'report')
 
+def userSimCheck():
+    userSimCheckFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'userSimCheck.py')
+    if os.path.isfile(userSimCheckFile):
+        return ('userSimCheck', userSimCheckFile)
+    return (None, None)
+
+
 def defaultWorkDir():
     # if os.environ['USER'] in grp.getgrnam('sg-ic-ipdv').gr_mem:
     #    return os.path.join('/ic/temp/ipdv', os.environ['USER'], os.path.basename(os.environ['PRJ_HOME']))

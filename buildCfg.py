@@ -24,7 +24,6 @@ class buildCfg(buildBaseCfg):
             buildSection = self.subSection[build]
         else:
             buildSection = self.subSection[self.defaultBuild]
-            print ('Use default build : %s' % self.defaultBuild)
         return buildSection
 
 class buildSubCfg(buildBaseCfg):

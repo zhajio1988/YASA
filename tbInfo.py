@@ -58,7 +58,7 @@ class testList(flowList):
                 file.write('+incdir+' + os.path.join(test, '..') + '\n')
                 file.write(os.path.join(test, os.path.basename(test) + '.sv') + '\n')
 
-    def getTestList(self):
+    def _getTestList(self):
         for dirpath, dirname, filename in os.walk(self._testDir, topdown=True, followlinks=True):
             if '.svn' in dirname:
                 dirname.remove('.svn')
@@ -113,8 +113,8 @@ class buildList(flowList):
         return self._buildlist
 
 testlist = allTestList()
-grouplist = groupList()
 buildlist = buildList()
+grouplist = groupList()
 
 def show(name):
     getattr(sys.modules[__name__], name + 'list').show()
@@ -122,7 +122,7 @@ def show(name):
 
 #if __name__ == '__main__':
 #    tests = testList()
-#    tests.getTestList()
+#    tests._getTestList()
 #    testlist.setTestLists('default_build', tests)
 #    show('test')
 #    show('build')

@@ -65,9 +65,6 @@ class userCliCfg(object):
             else:
                 self.kwargs['help'] = 'user defined option'
 
-            #userCli = Option('-%s' % keyVar)
-            #parser.add_argument(*self.args, **kwargs)
-
             self.parser.add_argument('-%s' % keyVar, **self.kwargs)
 
 if __name__ == '__main__':
