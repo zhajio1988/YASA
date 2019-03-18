@@ -19,6 +19,10 @@ class testcaseSuite(object):
                             test_cases=[self._test])
 
     @property
+    def test_result_file(self):
+        return self._run.get_test_result()
+
+    @property
     def test_information(self):
         """
         Returns the test information
@@ -30,7 +34,7 @@ class testcaseSuite(object):
         Run the test case using the output_path
         """
         results = self._run.run(*args, **kwargs)
-        return results[self._test] == PASSED
+        return results
 
 class TestRun(object):
     """
@@ -45,6 +49,9 @@ class TestRun(object):
 
     def set_test_cases(self, test_cases):
         self._test_cases = test_cases
+
+    def get_test_result(self):
+        return get_result_file_name(self._testWordDir)
 
     def run(self):
         """
@@ -103,7 +110,6 @@ class TestRun(object):
             sys.path.append(os.path.dirname(userSimCheckFile))
             from userSimCheck import userSimCheck as simCheck
             checker=simCheck()
-            print("debug point use userSimCheck")
         else:
             checker=self._simulator_if.simCheck 
 
@@ -111,7 +117,7 @@ class TestRun(object):
             line = line.strip()
             checker.check(line)
         status, reasonMsg = checker.status
-       
+
         for test_name in self._test_cases:
             if status == 'PASS':
                 results[test_name] = PASSED

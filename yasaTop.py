@@ -8,7 +8,6 @@ import csv
 import sys
 import traceback
 import logging
-import json
 import os
 import copy
 from os.path import exists, abspath, join, basename, splitext, normpath, dirname
@@ -69,7 +68,8 @@ class yasaTop(object):  # pylint: disable=too-many-instance-attributes, too-many
             if args.show is None:
                 if args.group is None and args.test is None:
                     #TODO: this check should be more robust
-                    raise ValueError('One of argument" -t/-test and -g/-group"must be supplied, when not use argument -show')
+                    self._printer.write('One of argument" -t/-test and -g/-group"must be supplied, when not use argument -show\n', fg='ri')
+                    sys.exit(1)
 
     def _create_database(self):
         """

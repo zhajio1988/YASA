@@ -36,10 +36,10 @@ class readBuildCfgFile(readCfgFileBase):
 
 
     def compileOption(self, buildName):
-            return self.getBuild(buildName).compileOption + self.build.compileOption if self.build.compileOption else self.getBuild(buildName).compileOption
+            return self.getBuild(buildName).compileOption + self._toList(self.build.compileOption) if self.build.compileOption else self.getBuild(buildName).compileOption
 
     def simOption(self, buildName):
-        return self.getBuild(buildName).simOption + self.build.simOption if self.build.simOption else self.getBuild(buildName).simOption
+        return self.getBuild(buildName).simOption + self._toList(self.build.simOption) if self.build.simOption else self.getBuild(buildName).simOption
 
     def preCompileOption(self, buildName):
         return self._toList(self.getBuild(buildName).preCompileOption) + self._toList(self.build.preCompileOption)

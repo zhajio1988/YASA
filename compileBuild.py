@@ -165,12 +165,20 @@ class singleTestCompile(compileBuildBase):
             #FIXME: if add shebang line, will cause */simv: No match. shell error
             #f.write('#!/bin/csh -fe\n')  
             f.write('#!/bin/sh -fe\n')  
-            f.write(os.path.join(self._buildDir, self._simulator_if.simExe()) + ' \\' + '\n')
+            if self._simulator_if.name == 'irun':
+                f.write(self._simulator_if.simExe() + ' \\' + '\n')
+            else:
+                f.write(os.path.join(self._buildDir, self._simulator_if.simExe()) + ' \\' + '\n')
             for index, item in enumerate(self.simCshContent()):
                 if index == len(self.simCshContent())-1:
                     #TODO: move this line to vcsInterface, because ntb_random_seed is vcs keyword 
+                    if self._simulator_if.name == 'irun':
+                            f.write('\t' + '-f ' + os.path.join(self._buildDir, 'test.f') + ' \\' + '\n')
                     if self._args.seed == 0: 
-                        f.write('\t' + '+ntb_random_seed=%s' % seed + ' \\' + '\n')
+                        if self._simulator_if.name == 'vcs':
+                            f.write('\t' + '+ntb_random_seed=%s' % seed + ' \\' + '\n')
+                        elif self._simulator_if.name == 'irun':
+                            f.write('\t' + '-svseed %s' % seed + ' \\' + '\n')
                     f.write('\t' + item + '\n')
                 else:
                     f.write('\t' + item + ' \\' + '\n')

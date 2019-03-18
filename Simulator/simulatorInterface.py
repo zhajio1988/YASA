@@ -58,7 +58,7 @@ class simulatorInterface(object):
     @classmethod
     def find_prefix(cls):
         """
-        Find prefix by looking at VUNIT_<SIMULATOR_NAME>_PATH environment variable
+        Find prefix by looking at YASA_<SIMULATOR_NAME>_PATH environment variable
         """
         prefix = os.environ.get("YASA_" + cls.name.upper() + "_PATH", None)
         if prefix is not None:

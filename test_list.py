@@ -8,7 +8,7 @@
 Functionality to handle lists of test suites and filtering of them
 """
 
-from test_report import (PASSED, FAILED)
+from test_report import (PASSED, WARNED, FAILED)
 
 
 class TestList(object):
@@ -81,6 +81,10 @@ class TestSuiteWrapper(object):
         return self._test_case.name
 
     @property
+    def test_result_file(self):
+        return self._test_case.test_result_file
+
+    @property
     def test_information(self):
         return {self.name: self._test_case.test_information}
 
@@ -93,4 +97,6 @@ class TestSuiteWrapper(object):
         Run the test suite and return the test results for all test cases
         """
         test_ok = self._test_case.run()
-        return {self._test_case.name: PASSED if test_ok else FAILED}
+        return  test_ok
+
+        #return {self._test_case.name: PASSED if test_ok else FAILED}

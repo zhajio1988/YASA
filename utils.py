@@ -40,7 +40,6 @@ def appendAttr(obj, k, v):
         else:
             setattr(obj, k, [v])
 
-
 def positive_int(val):
     """
     ArgumentParse positive int check

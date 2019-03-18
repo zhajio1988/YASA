@@ -1,0 +1,130 @@
+"""
+Interface for the (c) Cadence Incisive simulator
+"""
+import os
+import re
+from os.path import join, dirname, abspath, relpath
+import subprocess
+import sys
+import argparse
+from utils import *
+import logging
+from ostools import write_file, file_exists
+from .simulatorInterface import (simulatorInterface, run_command)
+from .simCheck import *
+
+LOGGER = logging.getLogger(__name__)
+
+class waveArgsAction(argparse.Action):
+    def __call__(self, parser, args, values, option = None):
+        args.wave = values
+        if args.wave == 'vpd':
+            appendAttr(args, 'compileOption', '-access +r +define+DUMP_VPD')
+        elif args.wave == 'fsdb':
+            appendAttr(args, 'compileOption', '-access +r +define+DUMP_FSDB')
+        elif args.wave == 'gui':
+            appendAttr(args, 'compileOption', '-access +rwc +define+DUMP_FSDB')
+            appendAttr(args, 'simOption', '-access +rwc -gui')
+
+class covArgsAction(argparse.Action):
+    def __call__(self, parser, args, values, option = None):
+        args.cov = values
+        #TODO: Add -cm_dir and -cm_name options
+        if args.cov == 'all':
+            appendAttr(args, 'compileOption', '-coverage all')
+            appendAttr(args, 'simOption', '-coverage all')
+            appendAttr(args, 'simOption', '+FCOV_EN')
+        else:
+            appendAttr(args, 'compileOption', '-cm ' + args.cov)
+            appendAttr(args, 'simOption', '-cm ' + args.cov)
+            appendAttr(args, 'simOption', ' +FCOV_EN')
+
+class seedArgsAction(argparse.Action):
+    def __call__(self, parser, args, values, option = None):
+        args.seed = values
+        if args.seed == 0:
+            appendAttr(args, 'simOption', '-svseed 0')
+        else:
+            appendAttr(args, 'simOption', '-svseed %d' % args.seed)
+
+class testArgsAction(argparse.Action):
+    def __call__(self, parser, args, values, option = None):
+        args.test = values
+        if args.test:
+            appendAttr(args, 'simOption', '+UVM_TESTNAME=%s' % args.test)
+
+class incisiveInterface(simulatorInterface):  # pylint: disable=too-many-instance-attributes
+    """
+    Interface for the (c) Cadence Incisive simulator
+    """
+
+    name = "irun"
+    supports_gui_flag = True
+
+    @staticmethod
+    def add_arguments(parser, group):
+        """
+        Add command line arguments
+        """
+        group.add_argument('-t', '-test', dest='test', action=testArgsAction, help='assign test name')
+
+        parser.add_argument('-w', '-wave', nargs='?', const='fsdb', dest='wave', action=waveArgsAction,
+                            choices=['vpd', 'fsdb', 'gui'],
+                            help='dump waveform(vpd or fsdb), default fsdb')
+        parser.add_argument('-cov', nargs='?', const='all', dest='cov', action=covArgsAction,
+                            help='collect code coverage, default all kinds collect(line+cond+fsm+tgl+branch+assert')
+
+        parser.add_argument('-seed', type=positive_int, dest='seed', default=0, action=seedArgsAction,
+                            help='set testcase ntb random seed')
+
+    @classmethod
+    def find_prefix_from_path(cls):
+        """
+        Find vcs simulator from PATH environment variable
+        """
+        return cls.find_toolchain(['vcs'])
+
+    def __init__(self):
+        simulatorInterface.__init__(self)
+        self._simCheck = irunSimCheck()
+
+    @property
+    def simCheck(self):
+        return self._simCheck;
+
+    def compileExe(self):
+        """
+        Returns Incisive compile executable cmd
+        """
+        return 'irun'
+
+    def simExe(self):
+        """
+        Returns Incisive simv executable cmd
+        """
+        return 'irun'
+
+    def executeCompile(self, buildDir, cmd, printer):
+        """
+        Incisive doesn't need compile step
+        """
+        pass
+
+    def executeSimulataion(self, testWordDir, simCmd):
+        if not run_command(simCmd, cwd=testWordDir):
+            return False
+        else:
+            return True
+
+class irunSimCheck(simCheck):
+    irunErrorPattern = r'^Error-\[.*\]'    
+    coreDumpPattern = r'Completed context dump phase'
+    simEndPattern = r'ncsim> exit'    
+    timingViolationPattern = r'.*Timing violation.*'
+
+    def __init__(self):
+        super(irunSimCheck, self).__init__()
+        self._simEndPattern = re.compile(irunSimCheck.simEndPattern)        
+        self.setErrPatterns(irunSimCheck.irunErrorPattern)    
+        self.setErrPatterns(irunSimCheck.coreDumpPattern)
+        self.setWarnPatterns(irunSimCheck.timingViolationPattern)        

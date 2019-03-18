@@ -4,6 +4,7 @@ Create simulator instances
 
 import os
 from .vcsInterface import vcsInterface
+from .incisiveInterface import incisiveInterface
 #from .simulatorInterface import (BooleanOption, ListOfStringOption)
 
 class simulatorFactory(object):
@@ -18,11 +19,12 @@ class simulatorFactory(object):
         """
         #TODO: add simulator interface here
         return [vcsInterface,
+                incisiveInterface,
                 ]
 
     def select_simulator(self):
         """
-        Select simulator class, either from VUNIT_SIMULATOR environment variable
+        Select simulator class, either from YASA_SIMULATOR environment variable
         or the first available
         """
         available_simulators = self._detect_available_simulators()
@@ -54,8 +56,10 @@ class simulatorFactory(object):
         #                    default=False,
         #                    help=("Open test case(s) in simulator gui with top level pre loaded"))
 
-        for sim in self.supported_simulators():
-            sim.add_arguments(parser, group)
+        #for sim in self.supported_simulators():
+        #    sim.add_arguments(parser, group)
+        simulator = self.select_simulator()
+        simulator.add_arguments(parser, group)
 
     def __init__(self):
         pass

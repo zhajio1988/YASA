@@ -50,18 +50,18 @@ class simCheck(object):
     def check(self, string):
         for errPattern in self._errPatterns:
             if errPattern.match(string):
-                excluded = filter(lambda x:x.match(string), self._excludeErrPatterns)
-                if not excluded:
-                    if self._failStatus != 'FATL':
-                        self._failStatus = 'FATL'
+                excluded = filter(lambda x: x.match(string), self._excludeErrPatterns)
+                if not list(excluded):
+                    if self._failStatus != 'FAIL':
+                        self._failStatus = 'FAIL'
                         self._reasonMsg = string
     
      
     
         for warnPattern in self._warnPatterns:
-            if warnPattern.match(string) :
+            if warnPattern.match(string):
                 excluded = filter(lambda x:x.match(string), self._excludeWarnPatterns)
-                if not excluded:
+                if not list(excluded):
                     if not self._failStatus:
                         self._failStatus = 'WARN'
                         self._reasonMsg = string 

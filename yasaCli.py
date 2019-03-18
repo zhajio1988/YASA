@@ -137,6 +137,7 @@ def _create_argument_parser(description=None, for_documentation=False):
 
     argParser.add_argument('-no-color', action='store_true',
                         default=False,
+                        dest='no_color',                        
                         help='Do not color output')
 
     argParser.add_argument('-log-level',
@@ -157,12 +158,12 @@ def _create_argument_parser(description=None, for_documentation=False):
                         dest='unique_sim',
                         help="Do not re-use the same simulator process for running different test cases (slower)")
 
-    argParser.add_argument("-export-json",
-                        default=None,
-                        help="Export project information to a JSON file.")
+    #argParser.add_argument("-export-json",
+    #                    default=None,
+    #                    help="Export project information to a JSON file.")
 
     argParser.add_argument('-version', action='version', version=version())
-
+    
     SIMULATOR_FACTORY.add_arguments(argParser, group)
 
     return argParser

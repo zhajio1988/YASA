@@ -446,7 +446,7 @@ def wrap(file_obj, use_color=True):
     Wrap file_obj in another stream which handles ANSI color codes using colorama
 
     NOTE:
-    imports colorama here to avoid dependency from setup.py importing VUnit before colorama is installed
+    imports colorama here to avoid dependency from setup.py importing YASA before colorama is installed
     """
     from colorama import AnsiToWin32
 
