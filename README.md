@@ -21,7 +21,9 @@ testcases, each testcase has several command line option.
 ### Typical Usage:
 * show help doc
 
-    %> python3 yasaTop.py -h  
+    echo /usr/local/bin/fish | sudo tee -a /etc/shells
+
+    %> python3 yasaTop.py -h 
     
 * show YASA doc file and copyright
     %> python3 yasaTop.py -doc
