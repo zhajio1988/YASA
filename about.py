@@ -1,57 +1,81 @@
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this file,
-# You can obtain one at http://mozilla.org/MPL/2.0/.
-#
-# Copyright (c) 2014-2018, Lars Asplund lars.anders.asplund@gmail.com
+#******************************************************************************
+# * Copyright (c) 2019, XtremeDV. All rights reserved.
+# *
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# *
+# * http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# *
+# * Author: Jude Zhang, Email: zhajio.1988@gmail.com
+# *******************************************************************************
 
 """
 Provides documentation and version information
 """
-
-
 def license_text():
     """
     Returns licence text
     """
-    return """VUnit
+    return """YASA
 -----
 
-VUnit except for OSVVM (see below) is released under the terms of
-Mozilla Public License, v. 2.0.
+YASA is released under the terms of Apache License, Version 2.0.
 
-Copyright (c) 2014-2018, Lars Asplund lars.anders.asplund@gmail.com
+Copyright (c) 2019, XtremeDV. Jude Zhang All rights reserved.
 
-OSVVM
+uvm
 -----
+uvm is the Universal Verification Methodology (UVM) reference implementation 
+from Accellera.
 
-OSVVM is redistributed as a submodule to VUnit for your convenience. OSVVM and derivative work
-located under examples/vhdl/osvvm_integration/src are licensed under the terms of Artistic License 2.0.
+vcs
+-----
+VCS is a product of Synopsys, Inc.
+Copyright 2003-2013 Synopsys, Inc. All Rights Reserved
+You are licensed only to use thise products
+for which you have lawfully obtained a valid license key.
 
-Copyright (c) 2006-2016, SynthWorks Design Inc http://www.synthworks.com
+irun
+-----
+Incisive is a product of Cadence Design Systems, Inc.
+(c) Copyright 1995-2014 Cadence Design Systems, Inc. All Rights Reserved
+You are licensed only to use thise products
+for which you have lawfully obtained a valid license key.
 """
-
 
 def doc():
     """
-    Returns short introduction to VUnit
+    Returns short introduction to YASA
     """
-    return r"""What is VUnit?
+    return r"""What is YASA?
 ==============
 
-VUnit is an open source unit testing framework for VHDL/SystemVerilog
-released under the terms of Mozilla Public License, v. 2.0. It
-features the functionality needed to realize continuous and automated
-testing of your HDL code. VUnit doesn't replace but rather complements
-traditional testing methodologies by supporting a "test early and
-often" approach through automation.
+YASA is an open source simulation framework for SystemVerilog/UVM testbentch
+released under the terms of Apache License, v. 2.0. 
+It support mutli_simulators, multi_languages, lsf etc.
+It support several excellent features. Such as:
+customized command line option, add any compilation options or simulation options, 
+running a testcase with random seeds for several rounds or running a group of 
+testcases, each testcase has several command line option.
 
-**Read more on our** `Website <https://vunit.github.io>`__
+Typical Usage:
+    %> python3 yasaTop.py -h    
+    %> python3 yasaTop.py -doc 
+    %> python3 yasaTop.py -version
+    %> python3 yasaTop.py -t sanity1 -co
+    %> python3 yasaTop.py -t sanity1 -r 5 
+    %> python3 yasaTop.py -t sanity1 -seed 352938188
+    %> python3 yasaTop.py -t sanity1 -seed 352938188 -so
+    %> python3 yasaTop.py -g top_smoke -co
+    %> python3 yasaTop.py -g top_smoke -p 5
 
-Contributing
-============
-Contributing in the form of code, feedback, ideas or bug reports are
-welcome. Read our `contribution guide
-<https://vunit.github.io/contributing.html>`__ to get started.
 
 License
 =======
@@ -60,7 +84,7 @@ License
 
 def version():
     """
-    Returns VUnit version
+    Returns YASA version
     """
     if PRE_RELEASE:
         return '%i.%i.%irc0' % (VERSION[0], VERSION[1], VERSION[2] + 1)
@@ -68,7 +92,7 @@ def version():
     return '%i.%i.%i' % (VERSION[0], VERSION[1], VERSION[2])
 
 
-VERSION = (4, 0, 8)
+VERSION = (1, 0, 0)
 
 # DO NOT TOUCH: Only set to False by PyPI deployment script
-PRE_RELEASE = True
+PRE_RELEASE = False

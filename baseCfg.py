@@ -1,3 +1,20 @@
+#******************************************************************************
+# * Copyright (c) 2019, XtremeDV. All rights reserved.
+# *
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# *
+# * http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# *
+# * Author: Jude Zhang, Email: zhajio.1988@gmail.com
+# *******************************************************************************
 from extconfigobj import ConfigObj, ParseError, Section, getSections, getKeyWords
 from globals import *
 
@@ -49,20 +66,14 @@ class baseCfg(object):
 
     def _readSubSection(self):
         if isinstance(self._section, Section):
-            #print('debug point1', getSections(self._section).keys())
             for k, v in getSections(self._section).items():
-                #print(k ,v)
                 self._subSection[k] = self._subSectionType(k,v,self)
                 self._subSection[k].parse()
 
     def _readBuildInOption(self):
-        #print("debug point2", self._section)
         for k,v in getKeyWords(self._section).items():
-            #print("debug point2", k, v)
             if self._checkKeyWord(k) :
-                #print("debug point3", k, v)
                 self._buildInOpts[k] = v #" ".join(v) if isinstance(v, list) else v
-                #print(self.buildInOption.keys())
 
     def _checkKeyWord(self, k):
         if not k in self._buildInOpts:
@@ -74,24 +85,14 @@ class includableTopCfg(baseCfg):
         super(includableTopCfg, self).__init__(name, section, parent)
         self._subSectionType = includableCfg
 
-    #def _readBuildInOption(self):
-    #    for k, v in getKeyWords(self._section).items():
-    #        print("debug point2", k, v)
-    #        if self._checkKeyWord(k):
-    #            self._buildInOpts[k] = v
-    #            #handlePlusEq(self._buildInOption[k])
-
     def parse(self):
         super(includableTopCfg, self).parse()
         for subSection in self._subSection.values():
-            #handlePlusEq(subSection.include)
             if not isinstance(subSection.include, list):
                 for incName in [subSection.include]:
-                    #print("debug point0", incName)
                     subSection.addInclude(self._subSection[incName])
             else:
                 for incName in subSection.include:
-                    #print("debug point1", incName)
                     subSection.addInclude(self._subSection[incName])
 
 class includableCfg(baseCfg):

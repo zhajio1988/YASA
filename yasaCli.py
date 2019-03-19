@@ -1,7 +1,25 @@
+#******************************************************************************
+# * Copyright (c) 2019, XtremeDV. All rights reserved.
+# *
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# *
+# * http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# *
+# * Author: Jude Zhang, Email: zhajio.1988@gmail.com
+# *******************************************************************************
 import argparse
+import sys
 from os.path import join, abspath
 from Simulator.simulatorFactory import SIMULATOR_FACTORY
-from about import version
+from about import version, doc
 from globals import *
 from utils import *
 from userCli import userCli
@@ -15,6 +33,8 @@ class yasaCli(object):
     def __init__(self, description=None):
         """
         :param description: A custom short description of the command line tool
+        add userCli object and lsfCli object for argparser
+        add _check function
         """
         self.parsedArgs = None
         self.parser = _create_argument_parser(description)
@@ -29,7 +49,6 @@ class yasaCli(object):
         Parse command line arguments
 
         :param argv: Use explicit argv instead of actual command line argument
-        :returns: The parsed argument namespace object
         """
         self.parsedArgs = self.parser.parse_args(args=argv)
         self._check()
@@ -43,9 +62,15 @@ class yasaCli(object):
         return self.parsedArgs
 
     def userCliCompileOption(self):
+        """
+        return compilation option extract from userCli command
+        """
         return self.userCli.compileOption()
 
     def userCliSimOption(self):
+        """
+        return simulation option extract from userCli command
+        """        
         return self.userCli.simOption()
 
 def _create_argument_parser(description=None, for_documentation=False):
@@ -66,14 +91,48 @@ def _create_argument_parser(description=None, for_documentation=False):
 
     argParser = argparse.ArgumentParser(description=description)
     group = argParser.add_mutually_exclusive_group()
-    group.add_argument('-g', '-group', dest='group', action='store', help='assign test group name')
-    group.add_argument('-show', dest='show', choices=['test', 'group', 'build'], help='show test list, group list or build list')
-    argParser.add_argument('-so', '-simonly', dest='simOnly', action='store_true', help='Only run simulation without compile step')
-    argParser.add_argument('-co', '-componly', dest='compOnly', action='store_true', help='Only compile without running tests')
-    argParser.add_argument('-b', '-build', dest='build', action='store', help='assign a specific build')
-    argParser.add_argument('-test_prefix', dest='testPrefix', default='', action='store', help='add testcase prefix')
-    argParser.add_argument('-r', '-repeat', type=positive_int, dest='repeat', default=1, action='store', help='testcase will random run in given repeat round')
-    argParser.add_argument('-c', '-clean', dest='clean', action='store_true', help='Remove output build dir')
+    group.add_argument('-g', '-group', 
+                        dest='group', 
+                        action='store', 
+                        help='assign test group name')
+
+    group.add_argument('-show', 
+                        dest='show', 
+                        choices=['test', 'group', 'build'], 
+                        help='show test list, group list or build list')
+
+    argParser.add_argument('-so', '-simonly', 
+                        dest='simOnly', 
+                        action='store_true', 
+                        help='Only run simulation without compile step')
+
+    argParser.add_argument('-co', '-componly', 
+                        dest='compOnly', 
+                        action='store_true', 
+                        help='Only compile without running tests')
+
+    argParser.add_argument('-b', '-build', 
+                        dest='build', 
+                        action='store', 
+                        help='assign a specific build')
+
+    argParser.add_argument('-test_prefix', 
+                        dest='testPrefix', 
+                        default='', 
+                        action='store', 
+                        help='add testcase prefix')
+
+    argParser.add_argument('-r', '-repeat', 
+                        type=positive_int, 
+                        dest='repeat', 
+                        default=1, 
+                        action='store', 
+                        help='testcase will random run in given repeat round')
+
+    argParser.add_argument('-c', '-clean', 
+                        dest='clean', 
+                        action='store_true', 
+                        help='Remove output build dir')
 
     argParser.add_argument('-fail-fast', action='store_true',
                         default=False,
@@ -152,6 +211,7 @@ def _create_argument_parser(description=None, for_documentation=False):
     #                    help="Export project information to a JSON file.")
 
     argParser.add_argument('-version', action='version', version=version())
+    argParser.add_argument('-doc', dest='docFile', action="store_true", help="print doc file")
     
     SIMULATOR_FACTORY.add_arguments(argParser, group)
 
@@ -163,28 +223,28 @@ def _argParser_for_documentation():
     """
     return _create_argument_parser(for_documentation=True)
 
-if __name__ == '__main__':
-    import sys
-
-    cli = yasaCli("Yet another simulation architecture top scripts")
-    #print(cli.parseArgs(sys.argv[1:]))
-    #print(vars(cli.parseArgs(sys.argv[1:])))
-    #print(cli.parseArgs(['-h']))
-    cli.parseArgs(sys.argv[1:])
-    args = cli.getParsedArgs()
-    print(args.sim_option)
-    print(args.wave_name)
-    print(args.prof)
-    print(args.seed)
-    print(args.compOnly)
-    print('11', args.build)
-
-    #print(args.simOption)
-    #print(args.compileOption)
-    print(cli.userCli.compileOption())
-    print(cli.userCli.simOption())
-    print(cli.userCliCompileOption())
-    print(cli.userCliSimOption())
-    print(args.lsfOptions)
-    print(args.subparsers)
-    print("end")
+#if __name__ == '__main__':
+#    import sys
+#
+#    cli = yasaCli("Yet another simulation architecture top scripts")
+#    #print(cli.parseArgs(sys.argv[1:]))
+#    #print(vars(cli.parseArgs(sys.argv[1:])))
+#    #print(cli.parseArgs(['-h']))
+#    cli.parseArgs(sys.argv[1:])
+#    args = cli.getParsedArgs()
+#    print(args.sim_option)
+#    print(args.wave_name)
+#    print(args.prof)
+#    print(args.seed)
+#    print(args.compOnly)
+#    print('11', args.build)
+#
+#    #print(args.simOption)
+#    #print(args.compileOption)
+#    print(cli.userCli.compileOption())
+#    print(cli.userCli.simOption())
+#    print(cli.userCliCompileOption())
+#    print(cli.userCliSimOption())
+#    print(args.lsfOptions)
+#    print(args.subparsers)
+#    print("end")

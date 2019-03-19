@@ -1,9 +1,20 @@
-"""
-
-"""
-
-from __future__ import print_function
-
+#******************************************************************************
+# * Copyright (c) 2019, XtremeDV. All rights reserved.
+# *
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# *
+# * http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# *
+# * Author: Jude Zhang, Email: zhajio.1988@gmail.com
+# *******************************************************************************
 import csv
 import sys
 import traceback
@@ -26,18 +37,13 @@ from test_report import TestReport
 from exceptions import CompileError
 from compileBuild import singleTestCompile, groupTestCompile
 import tbInfo
+from about import version, doc
 
 LOGGER = logging.getLogger(__name__)
 
-class yasaTop(object):  # pylint: disable=too-many-instance-attributes, too-many-public-methods
+class yasaTop(object):
     """
-    The public interface of YASA
-
-    :example:
-
-    .. code-block:: python
-
-       from import YASA
+    YASA top scripts
     """
 
     def __init__(self, argv):
@@ -64,6 +70,15 @@ class yasaTop(object):  # pylint: disable=too-many-instance-attributes, too-many
         database = self._create_database()
 
     def _checkArgs(self, args):
+        """
+        check parsed arguments, in case of input nothing from command line 
+        if you type
+        >>> YASAsim -doc
+        will print doc content, then exit with 0
+        """
+        if args.docFile:
+            print(doc())
+            sys.exit(0)
         if not args.compOnly and not args.build:
             if args.show is None:
                 if args.group is None and args.test is None:
@@ -147,6 +162,9 @@ class yasaTop(object):  # pylint: disable=too-many-instance-attributes, too-many
     def _main(self, post_run):
         """
         Base yasa main function without performing exit
+        support compile only and sim only option
+        >>> YASAsim -b candy_lover -co -u
+        >>> YASAsim -t sanity1 -co
         """
 
         if self._args.compOnly:
@@ -171,6 +189,8 @@ class yasaTop(object):  # pylint: disable=too-many-instance-attributes, too-many
     def _main_run(self, post_run):
         """
         Main with running tests
+        support single testcase running several rounds with specified seed or random seed
+        or running a group of testcases(each testcase with specified option) 
         """
         simulator_if = self._create_simulator_if()
 
@@ -279,17 +299,6 @@ class Results(object):
         """
 
         self._simulator_if.merge_coverage(file_name=file_name, args=args)
-
-def check_not_empty(lst, allow_empty, error_msg):
-    """
-    Raise ValueError if the list is empty unless allow_empty is True
-    Returns the list
-    """
-    if (not allow_empty) and (not lst):
-        raise ValueError(error_msg
-                         + ". Use allow_empty=True to avoid exception.")
-    return lst
-
 
 if __name__ == '__main__':
     import sys

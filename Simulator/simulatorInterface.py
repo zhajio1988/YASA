@@ -1,7 +1,6 @@
 """
 Generic simulator interface
 """
-
 import sys
 import os
 import subprocess
@@ -130,14 +129,10 @@ class simulatorInterface(object):
         Execute compile step and prints status information and compile log file
         """
         try:
-            #output = check_output(cmd, buildDir)
             if run_command(cmd, buildDir):
-                #printer.write(output)
                 printer.write("Compile passed", fg="gi")
                 printer.write("\n")
-            #except subprocess.CalledProcessError as err:
             else:
-                #printer.write("=== Command output: ===\n%s\n" % err.output)
                 printer.write("Compile failed", fg="ri")
                 printer.write("\n")
                 raise CompileError
@@ -182,30 +177,30 @@ def run_command(command, cwd=None):
     return False
 
 
-def check_output1(command, cwd=None, env=None):
-    """
-    Wrapper arround subprocess.check_output
-    """
-    try:
-        output = subprocess.check_output(command,
-                                         cwd=cwd,
-                                         shell=True,
-                                         stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as err:
-        err.output = err.output.decode("utf-8")
-        raise err
-    return output.decode("utf-8")
-
-def check_output(command, cwd=None, env=None):
-    """
-    Wrapper arround subprocess.check_output
-    """
-    import easyprocess 
-    try:
-        with easyprocess(command, cwd=cwd, shell=True) as proc:
-            print(proc.stdout.read())
-
-    except subprocess.CalledProcessError as err:
-        err.output = err.output.decode("utf-8")
-        raise err
-    #return output.decode("utf-8")
+#def check_output1(command, cwd=None, env=None):
+#    """
+#    Wrapper arround subprocess.check_output
+#    """
+#    try:
+#        output = subprocess.check_output(command,
+#                                         cwd=cwd,
+#                                         shell=True,
+#                                         stderr=subprocess.STDOUT)
+#    except subprocess.CalledProcessError as err:
+#        err.output = err.output.decode("utf-8")
+#        raise err
+#    return output.decode("utf-8")
+#
+#def check_output(command, cwd=None, env=None):
+#    """
+#    Wrapper arround subprocess.check_output
+#    """
+#    import easyprocess 
+#    try:
+#        with easyprocess(command, cwd=cwd, shell=True) as proc:
+#            print(proc.stdout.read())
+#
+#    except subprocess.CalledProcessError as err:
+#        err.output = err.output.decode("utf-8")
+#        raise err
+#    #return output.decode("utf-8")

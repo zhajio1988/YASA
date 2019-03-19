@@ -1,15 +1,13 @@
 """
-Interface for the (c) Cadence Incisive simulator
+Interface for the Cadence Incisive simulator
 """
 import os
 import re
 from os.path import join, dirname, abspath, relpath
-import subprocess
 import sys
 import argparse
 from utils import *
 import logging
-from ostools import write_file, file_exists
 from .simulatorInterface import (simulatorInterface, run_command)
 from .simCheck import *
 
@@ -29,7 +27,6 @@ class waveArgsAction(argparse.Action):
 class covArgsAction(argparse.Action):
     def __call__(self, parser, args, values, option = None):
         args.cov = values
-        #TODO: Add -cm_dir and -cm_name options
         if args.cov == 'all':
             appendAttr(args, 'compileOption', '-coverage all')
             appendAttr(args, 'simOption', '-coverage all')
@@ -53,9 +50,9 @@ class testArgsAction(argparse.Action):
         if args.test:
             appendAttr(args, 'simOption', '+UVM_TESTNAME=%s' % args.test)
 
-class incisiveInterface(simulatorInterface):  # pylint: disable=too-many-instance-attributes
+class incisiveInterface(simulatorInterface):
     """
-    Interface for the (c) Cadence Incisive simulator
+    Interface for the Cadence Incisive simulator
     """
 
     name = "irun"
@@ -80,9 +77,9 @@ class incisiveInterface(simulatorInterface):  # pylint: disable=too-many-instanc
     @classmethod
     def find_prefix_from_path(cls):
         """
-        Find vcs simulator from PATH environment variable
+        Find irun simulator from PATH environment variable
         """
-        return cls.find_toolchain(['vcs'])
+        return cls.find_toolchain(['irun'])
 
     def __init__(self):
         simulatorInterface.__init__(self)
@@ -106,7 +103,8 @@ class incisiveInterface(simulatorInterface):  # pylint: disable=too-many-instanc
 
     def executeCompile(self, buildDir, cmd, printer):
         """
-        Incisive doesn't need compile step
+        Incisive doesn't need compile step, so override this function
+        in base class, then do nothing 
         """
         pass
 
@@ -117,6 +115,9 @@ class incisiveInterface(simulatorInterface):  # pylint: disable=too-many-instanc
             return True
 
 class irunSimCheck(simCheck):
+    """
+    Irun specified simulation results checker
+    """  
     irunErrorPattern = r'^Error-\[.*\]'    
     coreDumpPattern = r'Completed context dump phase'
     simEndPattern = r'ncsim> exit'    
