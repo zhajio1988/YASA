@@ -11,7 +11,7 @@ customized command line option, add any compilation options or simulation option
 running a testcase with random seeds for several rounds or running a group of 
 testcases, each testcase has several command line option.
 
-### Dependencies
+### Dependencies:
 * python 3.6
 * configobj
 * argparse
@@ -19,8 +19,11 @@ testcases, each testcase has several command line option.
 * vcs or incisive simulator
 
 ### Typical Usage:
+* show help doc
     %> python3 yasaTop.py -h    
+* show YASA doc file and copyright
     %> python3 yasaTop.py -doc 
+* show YASA version    
     %> python3 yasaTop.py -version
     %> python3 yasaTop.py -t sanity1 -co
     %> python3 yasaTop.py -t sanity1 -r 5 
@@ -29,9 +32,9 @@ testcases, each testcase has several command line option.
     %> python3 yasaTop.py -g top_smoke -co
     %> python3 yasaTop.py -g top_smoke -p 5
 
-### help
-```bash
+### help:
     %> python3 yasaTop.py -h
+```bash
 ******************************************************************************
 usage: yasaTop.py [-h] [-g GROUP] [-show {test,group,build}] [-so] [-co]
                   [-b BUILD] [-test_prefix TESTPREFIX] [-r REPEAT] [-c]
@@ -122,10 +125,10 @@ optional arguments:
 ```
 ******************************************************************************
 
-### doc 
+### doc:
     %> python3 yasaTop.py -doc
 
-### copyright
+### copyright:
 ******************************************************************************
 * Copyright (c) 2019, XtremeDV. All rights reserved.
 * Licensed under the Apache License, Version 2.0 (the "License");
