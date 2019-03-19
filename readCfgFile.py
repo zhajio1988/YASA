@@ -59,13 +59,13 @@ class readBuildCfgFile(readCfgFileBase):
         elif isinstance(preOptions, list):
             return preOptions
 
-
 class readGroupCfgFile(readCfgFileBase):
     def __init__(self, file):
         super(readGroupCfgFile, self).__init__('readGroupCfgFile', file)
         self._subSectionType = {'testgroup': groupCfg}
         self.parse()
         self._validBuild = []
+        self._allBuild = []
         self._tests = {}
 
     @property
@@ -77,12 +77,17 @@ class readGroupCfgFile(readCfgFileBase):
     def validBuild(self):
         return self._validBuild[0]
 
+    @property
+    def allBuild(self):
+        return list(set(self._allBuild))
+
     def getTests(self, groupName):
         groupSection = self.testGroup.getGroup(groupName)
         globalBuild = groupSection.buildOption
         globalTests = groupSection.testsOption
         if globalBuild:
             self._validBuild.append(globalBuild)
+            self._allBuild.append(globalBuild)
         if globalTests:
             self._tests[groupName] = globalTests
         if groupSection.include:
@@ -90,9 +95,9 @@ class readGroupCfgFile(readCfgFileBase):
                 if incGroup.testsOption:
                     self._tests[incGroup.name] = incGroup.testsOption
                 self.setValidBuild(globalBuild, incGroup.buildOption)
+                self._allBuild.append(incGroup.buildOption)
 
         self.checkBuild(self._validBuild, groupName)
-        print(self._tests)
         return self._tests
 
     def setValidBuild(self, globalBuild, subBuild):
@@ -108,7 +113,7 @@ class readGroupCfgFile(readCfgFileBase):
         if len(buildSet) != 1:
             raise ValueError(('group %s has included subgroup is must be in same build' % groupName))
 
-#if __name__ == '__main__':
+if __name__ == '__main__':
 #    config = readBuildCfgFile(defaultBuildFile())
 #    print(config.build.simOption)
 #    print(config.build.compileOption)
@@ -121,9 +126,9 @@ class readGroupCfgFile(readCfgFileBase):
 #    print(config.postSimOption('dla'))
 
 
-    #config = readGroupCfgFile(defaultGroupFile())
-    #config.getTests('v1_regr')
-    #config.getTests('top_regr')
+    config = readGroupCfgFile(defaultGroupFile())
+    config.getTests('v1_regr')
+    config.getTests('top_regr')
 
     #for v in config.testgroup.subSection.values():
     #    print(v.include)

@@ -113,6 +113,7 @@ class TestRun(object):
         else:
             checker=self._simulator_if.simCheck 
 
+        checker.resetStatus()
         for line in test_results.splitlines():
             line = line.strip()
             checker.check(line)

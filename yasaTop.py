@@ -24,7 +24,7 @@ from color_printer import (COLOR_PRINTER,
 from test_runner import TestRunner
 from test_report import TestReport
 from exceptions import CompileError
-from compileBuild import singleTestCompile
+from compileBuild import singleTestCompile, groupTestCompile
 import tbInfo
 
 LOGGER = logging.getLogger(__name__)
@@ -174,10 +174,14 @@ class yasaTop(object):  # pylint: disable=too-many-instance-attributes, too-many
         """
         simulator_if = self._create_simulator_if()
 
-        compile = singleTestCompile(cli=self._cli, simulator_if=simulator_if)
-        compile.prepareEnv()
-        test_list = self._create_tests(compile._testCaseWordDir, compile.simCmd(), simulator_if)
-        if not self._args.simOnly:        
+        if self._args.group:
+            compile = groupTestCompile(cli=self._cli, simulator_if=simulator_if)
+            compile.prepareEnv()            
+        else:
+            compile = singleTestCompile(cli=self._cli, simulator_if=simulator_if)
+            compile.prepareEnv()   
+        test_list = self._create_tests(compile._testCaseWorkDir, compile.simCmd(), simulator_if)
+        if not self._args.simOnly:
             self._compile(compile._buildDir, compile.compileCmd(), simulator_if)
 
         start_time = ostools.get_time()
@@ -211,12 +215,15 @@ class yasaTop(object):  # pylint: disable=too-many-instance-attributes, too-many
         """
         simulator_if = self._create_simulator_if()
 
-        compile = singleTestCompile(cli=self._cli, simulator_if=simulator_if)
-        compile.prepareEnv()
-        test_list = self._create_tests(compile._testCaseWordDir, compile.simCmd(), simulator_if)
+        if self._args.group:
+            compile = groupTestCompile(cli=self._cli, simulator_if=simulator_if)
+            compile.prepareEnv()
+        else:
+            compile = singleTestCompile(cli=self._cli, simulator_if=simulator_if)
+            compile.prepareEnv()     
+        test_list = self._create_tests(compile._testCaseWorkDir, compile.simCmd(), simulator_if)
 
         self._compile(compile._buildDir, compile.compileCmd(), simulator_if)        
-        #self._compile(buildDir, cmd, simulator_if)
         return True
 
     def _create_output_path(self, clean):
