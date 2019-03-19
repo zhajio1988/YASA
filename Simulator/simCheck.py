@@ -21,6 +21,11 @@ class simCheck(object):
         self._endFlagHit = False
         self._simEndPattern = None 
 
+    def resetStatus(self):
+        self._failStatus = ''
+        self._reasonMsg = ''
+        self._endFlagHit = False
+
     @property
     def status (self):
         if self._failStatus:
