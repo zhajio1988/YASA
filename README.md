@@ -9,8 +9,8 @@ YASA is an open source simulation framework for SystemVerilog/UVM testbentch
 released under the terms of Apache License, v. 2.0. 
 It support mutli_simulators, multi_languages, lsf etc.
 It support several excellent features. Such as:
-customized command line option, add any compilation options or simulation options, 
-running a testcase with random seeds for several rounds or running a group of 
+customized command line arguments, can add any compilation options or simulation options, 
+can running a testcase with random seeds for several rounds or running a group of 
 testcases, each testcase has several command line options.
 
 ### Dependencies:
