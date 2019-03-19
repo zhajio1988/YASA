@@ -1,9 +1,9 @@
 *******************************************************************************
 # YASA
 
-Yet Another Simulation Architecture
+:squirrel:Yet Another Simulation Architecture
 
-Author: Jude Zhang, :e-mail:zhajio.1988@gmail.com
+Author: Jude Zhang, E-mail: zhajio.1988@gmail.com
 
 YASA is an open source simulation framework for SystemVerilog/UVM testbentch
 released under the terms of Apache License, v. 2.0. 
