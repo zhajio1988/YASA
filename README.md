@@ -32,93 +32,92 @@ testcases, each testcase has several command line option.
 ### help
     %> python3 yasaTop.py -h
 ******************************************************************************
-usage: yasaTop.py [-h] [-g GROUP] [-show {test,group,build}] [-so] [-co]
-                  [-b BUILD] [-test_prefix TESTPREFIX] [-r REPEAT] [-c]
-                  [-fail-fast] [-o OUTPUT_PATH] [-x [XUNIT_XML]]
-                  [-xunit-xml-format {jenkins,bamboo}] [-exit-0]
-                  [-dont-catch-exceptions] [-v] [-q] [-no-color]
-                  [-log-level {info,error,warning,debug}] [-p NUM_THREADS]
-                  [-u] [-version] [-doc] [-t TEST] [-w [{vpd,fsdb,gui}]]
-                  [-cov [COV]] [-seed SEED] [-vh] [-prof]
-                  [-wave_name WAVE_NAME] [-pre_comp_option PRE_COMP_OPTION]
-                  [-comp_option COMP_OPTION]
-                  [-post_comp_option POST_COMP_OPTION]
-                  [-pre_sim_option PRE_SIM_OPTION] [-sim_option SIM_OPTION]
-                  [-post_sim_option POST_SIM_OPTION]
-                  {lsf} ...
-
-Yet another simulation architecture® top scripts
-
-positional arguments:
-  {lsf}
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -g GROUP, -group GROUP
-                        assign test group name
-  -show {test,group,build}
-                        show test list, group list or build list
-  -so, -simonly         Only run simulation without compile step
-  -co, -componly        Only compile without running tests
-  -b BUILD, -build BUILD
-                        assign a specific build
-  -test_prefix TESTPREFIX
-                        add testcase prefix
-  -r REPEAT, -repeat REPEAT
-                        testcase will random run in given repeat round
-  -c, -clean            Remove output build dir
-  -fail-fast            Stop immediately on first failing test
-  -o OUTPUT_PATH, -output-path OUTPUT_PATH
-                        Output path for compilation and simulation artifacts
-  -x [XUNIT_XML], -xunit-xml [XUNIT_XML]
-                        Xunit test report .xml file
-  -xunit-xml-format {jenkins,bamboo}
-                        Only valid with --xunit-xml argument. Defines where in
-                        the XML file the simulator output is stored on a
-                        failure. "jenkins" = Output stored in <system-out>,
-                        "bamboo" = Output stored in <failure>.
-  -exit-0               Exit with code 0 even if a test failed. Still exits
-                        with code 1 on fatal errors such as compilation
-                        failure
-  -dont-catch-exceptions
-                        Let exceptions bubble up all the way. Useful when
-                        running with "python -m pdb".
-  -v, -verbose          Print test output immediately and not only when
-                        failure
-  -q, --quiet           Do not print test output even in the case of failure
-  -no-color             Do not color output
-  -log-level {info,error,warning,debug}
-                        Log level of Yasa internal python logging. Used for
-                        debugging
-  -p NUM_THREADS, -num-threads NUM_THREADS
-                        Number of tests to run in parallel. Test output is not
-                        continuously written in verbose mode with p > 1
-  -u, -unique_sim       Do not re-use the same simulator process for running
-                        different test cases (slower)
-  -version              show program's version number and exit
-  -doc                  print doc file
-  -t TEST, -test TEST   assign test name
-  -w [{vpd,fsdb,gui}], -wave [{vpd,fsdb,gui}]
-                        dump waveform(vpd or fsdb), default fsdb
-  -cov [COV]            collect code coverage, default all kinds
-                        collect(line+cond+fsm+tgl+branch+assert
-  -seed SEED            set testcase ntb random seed
-  -vh                   set verbosity to UVM_HIGH
-  -prof                 user defined option
-  -wave_name WAVE_NAME  set fsdb waveform name
-  -pre_comp_option PRE_COMP_OPTION
-                        previous compile option
-  -comp_option COMP_OPTION
-                        compile option
-  -post_comp_option POST_COMP_OPTION
-                        post compile option
-  -pre_sim_option PRE_SIM_OPTION
-                        previous sim option
-  -sim_option SIM_OPTION
-                        sim_option
-  -post_sim_option POST_SIM_OPTION
-                        post sim option
-
+* usage: yasaTop.py [-h] [-g GROUP] [-show {test,group,build}] [-so] [-co]
+*                   [-b BUILD] [-test_prefix TESTPREFIX] [-r REPEAT] [-c]
+*                   [-fail-fast] [-o OUTPUT_PATH] [-x [XUNIT_XML]]
+*                   [-xunit-xml-format {jenkins,bamboo}] [-exit-0]
+*                   [-dont-catch-exceptions] [-v] [-q] [-no-color]
+*                   [-log-level {info,error,warning,debug}] [-p NUM_THREADS]
+*                   [-u] [-version] [-doc] [-t TEST] [-w [{vpd,fsdb,gui}]]
+*                   [-cov [COV]] [-seed SEED] [-vh] [-prof]
+*                   [-wave_name WAVE_NAME] [-pre_comp_option PRE_COMP_OPTION]
+*                   [-comp_option COMP_OPTION]
+*                   [-post_comp_option POST_COMP_OPTION]
+*                   [-pre_sim_option PRE_SIM_OPTION] [-sim_option SIM_OPTION]
+*                   [-post_sim_option POST_SIM_OPTION]
+*                   {lsf} ...
+* 
+* Yet another simulation architecture® top scripts
+* 
+* positional arguments:
+*   {lsf}
+* 
+* optional arguments:
+*   -h, --help            show this help message and exit
+*   -g GROUP, -group GROUP
+*                         assign test group name
+*   -show {test,group,build}
+*                         show test list, group list or build list
+*   -so, -simonly         Only run simulation without compile step
+*   -co, -componly        Only compile without running tests
+*   -b BUILD, -build BUILD
+*                         assign a specific build
+*   -test_prefix TESTPREFIX
+*                         add testcase prefix
+*   -r REPEAT, -repeat REPEAT
+*                         testcase will random run in given repeat round
+*   -c, -clean            Remove output build dir
+*   -fail-fast            Stop immediately on first failing test
+*   -o OUTPUT_PATH, -output-path OUTPUT_PATH
+*                         Output path for compilation and simulation artifacts
+*   -x [XUNIT_XML], -xunit-xml [XUNIT_XML]
+*                         Xunit test report .xml file
+*   -xunit-xml-format {jenkins,bamboo}
+*                         Only valid with --xunit-xml argument. Defines where in
+*                         the XML file the simulator output is stored on a
+*                         failure. "jenkins" = Output stored in <system-out>,
+*                         "bamboo" = Output stored in <failure>.
+*   -exit-0               Exit with code 0 even if a test failed. Still exits
+*                         with code 1 on fatal errors such as compilation
+*                         failure
+*   -dont-catch-exceptions
+*                         Let exceptions bubble up all the way. Useful when
+*                         running with "python -m pdb".
+*   -v, -verbose          Print test output immediately and not only when
+*                         failure
+*   -q, --quiet           Do not print test output even in the case of failure
+*   -no-color             Do not color output
+*   -log-level {info,error,warning,debug}
+*                         Log level of Yasa internal python logging. Used for
+*                         debugging
+*   -p NUM_THREADS, -num-threads NUM_THREADS
+*                         Number of tests to run in parallel. Test output is not
+*                         continuously written in verbose mode with p > 1
+*   -u, -unique_sim       Do not re-use the same simulator process for running
+*                         different test cases (slower)
+*   -version              show program's version number and exit
+*   -doc                  print doc file
+*   -t TEST, -test TEST   assign test name
+*   -w [{vpd,fsdb,gui}], -wave [{vpd,fsdb,gui}]
+*                         dump waveform(vpd or fsdb), default fsdb
+*   -cov [COV]            collect code coverage, default all kinds
+*                         collect(line+cond+fsm+tgl+branch+assert
+*   -seed SEED            set testcase ntb random seed
+*   -vh                   set verbosity to UVM_HIGH
+*   -prof                 user defined option
+*   -wave_name WAVE_NAME  set fsdb waveform name
+*   -pre_comp_option PRE_COMP_OPTION
+*                         previous compile option
+*   -comp_option COMP_OPTION
+*                         compile option
+*   -post_comp_option POST_COMP_OPTION
+*                         post compile option
+*   -pre_sim_option PRE_SIM_OPTION
+*                         previous sim option
+*   -sim_option SIM_OPTION
+*                         sim_option
+*   -post_sim_option POST_SIM_OPTION
+*                         post sim option
 ******************************************************************************
 
 ### doc 
