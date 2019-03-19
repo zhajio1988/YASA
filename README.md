@@ -1,6 +1,6 @@
 *******************************************************************************
 # YASA
-Yet Another Simulation Architecture <\br>
+Yet Another Simulation Architecture
 Author: Jude Zhang, Email: zhajio.1988@gmail.com
 
 YASA is an open source simulation framework for SystemVerilog/UVM testbentch
@@ -20,15 +20,13 @@ testcases, each testcase has several command line option.
 
 ### Typical Usage:
 * show help doc
-
-    echo /usr/local/bin/fish | sudo tee -a /etc/shells
-
-    %> python3 yasaTop.py -h 
+    `%> python3 yasaTop.py -h`
     
 * show YASA doc file and copyright
-    %> python3 yasaTop.py -doc
+    `%> python3 yasaTop.py -doc`
+    
 * show YASA version
-    %> python3 yasaTop.py -version
+    `%> python3 yasaTop.py -version`
     %> python3 yasaTop.py -t sanity1 -co
     %> python3 yasaTop.py -t sanity1 -r 5 
     %> python3 yasaTop.py -t sanity1 -seed 352938188
