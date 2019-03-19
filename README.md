@@ -1,7 +1,7 @@
 *******************************************************************************
 # YASA
 
-:squirrel:Yet Another Simulation Architecture
+:snail:Yet Another Simulation Architecture
 
 Author: Jude Zhang, E-mail: zhajio.1988@gmail.com
 
