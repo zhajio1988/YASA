@@ -156,7 +156,6 @@ optional arguments:
     %> python3 yasaTop.py -doc
     
 ### License:
-******************************************************************************
 ```
 =======
 YASA
@@ -185,7 +184,6 @@ Incisive is a product of Cadence Design Systems, Inc.
 You are licensed only to use thise products
 for which you have lawfully obtained a valid license key.
 ```
-*******************************************************************************
 
 ### Special thanks:
 Special thanks to Apollo Li for his IPsim :+1: give me read config file demo script
