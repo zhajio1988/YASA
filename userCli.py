@@ -1,8 +1,7 @@
 from extconfigobj import ConfigObj, ConfigObjError, Section
-import copy
 from globals import *
 
-class userCliCfg(object):
+class userCli(object):
     def __init__(self, parser=None, ini_file=None):
         self.parser = parser
         self.kwargs = {}
@@ -71,17 +70,17 @@ if __name__ == '__main__':
     import argparse
     import sys
 
-    #print(vars(userCliCfg.userCliSection()))
-    #userCliCfg.userCliSection.walk(userCliCfg.add_arguments())
+    #print(vars(userCli.userCliSection()))
+    #userCli.userCliSection.walk(userCli.add_arguments())
     parser = argparse.ArgumentParser()
-    userCliCfg = userCliCfg(parser)
-    userCliCfg.addArguments()
+    userCli = userCli(parser)
+    userCli.addArguments()
     args = parser.parse_args(sys.argv[1:])
-    userCliCfg.setParsedArgs(args)
+    userCli.setParsedArgs(args)
     print(args)
     print(args.prof)
     print(args.vh)
     print(args.wave_name)
-    print(userCliCfg.compileOption())
-    print(userCliCfg.simOption())
+    print(userCli.compileOption())
+    print(userCli.simOption())
     #print(args.sim_option)
