@@ -61,7 +61,7 @@ testcases, each testcase has several command line options.
 
     `%> python3 yasaTop.py -g top_smoke -p 5`
 
-### help:
+### Help:
     %> python3 yasaTop.py -h
 ```
 usage: yasaTop.py [-h] [-g GROUP] [-show {test,group,build}] [-so] [-co]
@@ -152,7 +152,7 @@ optional arguments:
                         post sim option
 ```
 
-### doc:
+### Doc:
     %> python3 yasaTop.py -doc
     
 ### License:
