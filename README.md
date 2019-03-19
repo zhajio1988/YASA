@@ -30,12 +30,34 @@ testcases, each testcase has several command line option.
 * show YASA version
 
     `%> python3 yasaTop.py -version`
-    %> python3 yasaTop.py -t sanity1 -co
-    %> python3 yasaTop.py -t sanity1 -r 5 
-    %> python3 yasaTop.py -t sanity1 -seed 352938188
-    %> python3 yasaTop.py -t sanity1 -seed 352938188 -so
-    %> python3 yasaTop.py -g top_smoke -co
-    %> python3 yasaTop.py -g top_smoke -p 5
+    
+* compile only, build candy_lover, unique_sim mode
+
+    `%> python3 yasaTop.py -b candy_lover -co -u`
+    
+* compile only, testcase sanity1
+
+    `%> python3 yasaTop.py -t sanity1 -co`
+    
+* running testcase sanity1, 5 times,each time with random seed
+
+    `%> python3 yasaTop.py -t sanity1 -r 5`
+    
+* running testcase sanity1 with seed 352938188
+
+    `%> python3 yasaTop.py -t sanity1 -seed 352938188`
+
+* running testcase sanity1 with seed 352938188, sim only
+
+    `%> python3 yasaTop.py -t sanity1 -seed 352938188 -so`
+    
+* compile only, group top_smoke
+
+    `%> python3 yasaTop.py -g top_smoke -co`
+    
+* running group top_smoke, use 5 threads
+
+    `%> python3 yasaTop.py -g top_smoke -p 5`
 
 ### help:
     %> python3 yasaTop.py -h
