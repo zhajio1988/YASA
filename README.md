@@ -156,18 +156,35 @@ optional arguments:
 
 ### doc:
     %> python3 yasaTop.py -doc
-
+    
 ### copyright:
 ******************************************************************************
-* Copyright (c) 2019, XtremeDV. All rights reserved.
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* http://www.apache.org/licenses/LICENSE-2.0
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-* Author: Jude Zhang, Email: zhajio.1988@gmail.com
+```
+=======
+YASA
+-----
+
+YASA is released under the terms of Apache License, Version 2.0.
+
+Copyright (c) 2019, XtremeDV. Jude Zhang All rights reserved.
+
+uvm
+-----
+uvm is the Universal Verification Methodology (UVM) reference implementation 
+from Accellera.
+
+vcs
+-----
+VCS is a product of Synopsys, Inc.
+Copyright 2003-2013 Synopsys, Inc. All Rights Reserved
+You are licensed only to use thise products
+for which you have lawfully obtained a valid license key.
+
+irun
+-----
+Incisive is a product of Cadence Design Systems, Inc.
+(c) Copyright 1995-2014 Cadence Design Systems, Inc. All Rights Reserved
+You are licensed only to use thise products
+for which you have lawfully obtained a valid license key.
+```
 *******************************************************************************
