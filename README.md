@@ -1,8 +1,6 @@
 *******************************************************************************
 # YASA
 
-<center>YASA</center>
-
 Yet Another Simulation Architecture
 
 Author: Jude Zhang, Email: zhajio.1988@gmail.com
