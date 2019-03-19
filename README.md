@@ -64,7 +64,7 @@ testcases, each testcase has several command line options.
 ### help:
     %> python3 yasaTop.py -h
 ******************************************************************************
-```bash
+```
 usage: yasaTop.py [-h] [-g GROUP] [-show {test,group,build}] [-so] [-co]
                   [-b BUILD] [-test_prefix TESTPREFIX] [-r REPEAT] [-c]
                   [-fail-fast] [-o OUTPUT_PATH] [-x [XUNIT_XML]]
