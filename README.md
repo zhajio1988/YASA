@@ -1,6 +1,8 @@
 *******************************************************************************
 # YASA
 
+<center>YASA</center>
+
 Yet Another Simulation Architecture
 
 Author: Jude Zhang, Email: zhajio.1988@gmail.com
@@ -11,7 +13,7 @@ It support mutli_simulators, multi_languages, lsf etc.
 It support several excellent features. Such as:
 customized command line option, add any compilation options or simulation options, 
 running a testcase with random seeds for several rounds or running a group of 
-testcases, each testcase has several command line option.
+testcases, each testcase has several command line options.
 
 ### Dependencies:
 * python 3.6
