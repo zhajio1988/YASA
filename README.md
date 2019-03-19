@@ -20,12 +20,15 @@ testcases, each testcase has several command line option.
 
 ### Typical Usage:
 * show help doc
+
     `%> python3 yasaTop.py -h`
     
 * show YASA doc file and copyright
+
     `%> python3 yasaTop.py -doc`
     
 * show YASA version
+
     `%> python3 yasaTop.py -version`
     %> python3 yasaTop.py -t sanity1 -co
     %> python3 yasaTop.py -t sanity1 -r 5 
