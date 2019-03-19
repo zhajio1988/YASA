@@ -157,7 +157,7 @@ optional arguments:
 ### doc:
     %> python3 yasaTop.py -doc
     
-### copyright:
+### License:
 ******************************************************************************
 ```
 =======
