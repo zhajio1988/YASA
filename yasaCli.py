@@ -4,7 +4,8 @@ from Simulator.simulatorFactory import SIMULATOR_FACTORY
 from about import version
 from globals import *
 from utils import *
-import userCli
+from userCli import userCli
+from lsfCli import lsfCli
 
 class yasaCli(object):
     """
@@ -17,8 +18,11 @@ class yasaCli(object):
         """
         self.parsedArgs = None
         self.parser = _create_argument_parser(description)
-        self.userCliCfg = userCli.userCliCfg(self.parser)
-        self.userCliCfg.addArguments()
+        self.subParsers = self.parser.add_subparsers(dest='subparsers')        
+        self.userCli = userCli(self.parser)
+        self.userCli.addArguments()
+        self.lsfCli =lsfCli(self.subParsers)        
+        self.lsfCli.addArguments()
 
     def parseArgs(self, argv=None):
         """
@@ -29,35 +33,20 @@ class yasaCli(object):
         """
         self.parsedArgs = self.parser.parse_args(args=argv)
         self._check()
-        self.userCliCfg.setParsedArgs(self.parsedArgs)
-        #return args
+        self.userCli.setParsedArgs(self.parsedArgs)
+        self.lsfCli.setParsedArgs(self.parsedArgs)
 
     def _check(self):
         pass
-        #if self.parsedArgs.show is None:
-        #    if self.parsedArgs.group is None and self.parsedArgs.test is None:
-        #        self.parser.error('One of argument" -t/-test and -g/-group"must be supplied, when not use argument -show')
 
     def getParsedArgs(self):
         return self.parsedArgs
 
     def userCliCompileOption(self):
-        return self.userCliCfg.compileOption()
+        return self.userCli.compileOption()
 
     def userCliSimOption(self):
-        return self.userCliCfg.simOption()
-
-
-#    def __call__(self, parser, args, values, option = None):
-#        print("debug point1", args.seed)        
-#        args.repeat = values
-#        for i in range(args.repeat):
-#            if values == 0:
-#                seed = '%d' % (randint(1, 0xffffffff))
-#            else:
-#                seed = values
-#            appendAttr(args, 'compileOption', '-cm ' + args.cov)
-#            print(seed)
+        return self.userCli.simOption()
 
 def _create_argument_parser(description=None, for_documentation=False):
     """
@@ -192,9 +181,10 @@ if __name__ == '__main__':
 
     #print(args.simOption)
     #print(args.compileOption)
-    print(cli.userCliCfg.compileOption())
-    print(cli.userCliCfg.simOption())
+    print(cli.userCli.compileOption())
+    print(cli.userCli.simOption())
     print(cli.userCliCompileOption())
     print(cli.userCliSimOption())
-
+    print(args.lsfOptions)
+    print(args.subparsers)
     print("end")
