@@ -59,17 +59,28 @@ class groupSubCfg(includableCfg):
         return  self._buildInOpts['args']
 
     def _parseTests(self):
+        """
+        Parse each testcase in group. If group have args field,
+        append args with testcase name. if tests field itself has
+        args field. Duplicate fields in group args field will be overwritten
+        Such as sanity2 will use its seed 56789 and repeat num 2.
+        seed 56789 overwrite seed 12345 in args field.
+        sanity3 will use its seed 12345 and repeat num 3
+        ```
+        [[top_smoke]]
+        build = candy_lover
+        args = -vh  -seed 12345 -r 2
+        tests = sanity2 -seed 56789
+        tests = sanity3 -r 3 
+        ```
+        """
         for test in self._buildInOpts['tests']:
             appendArgs = []
-            #print("debug point test", test)
             testList = test.split("-")
             testArgs = test.split(" ")[1:]
-            #print('22', testArgs)
             if testList[1:] and self.argsOption:
                 self._getTestArgs(testList[1:], appendArgs)
-                #print("debug point appendArgs1", appendArgs)
                 testArgs.append(" ".join(['-'+ x for x in appendArgs]))
-                #print("debug point testArgs1", testArgs)
                 index = self._buildInOpts['tests'].index(test)
                 self._buildInOpts['tests'].pop(index)
                 self._buildInOpts['tests'].insert(index, testList[0] + " ".join(testArgs))
@@ -78,15 +89,16 @@ class groupSubCfg(includableCfg):
                 index = self._buildInOpts['tests'].index(test)
                 self._buildInOpts['tests'].pop(index)
                 self._buildInOpts['tests'].insert(index, " ".join(testList))
-            #print(self._buildInOpts['tests'])
 
     def _getTestArgs(self, testArgs, appendArgs):
+        """
+        Get testcase args. Judge if Duplicate fields exist or not.
+        then deal with these situation.
+        """
         append = True
         argsList = [i.strip() for i in self.argsOptionList if i != '']
-        #print("debug point j", argsList)
         for j in argsList:
             j = j.strip().split(" ")
-            #print("debug point j", j)
             for i in testArgs:
                 i = i.strip().split(" ")
                 if len(i) > 1:
@@ -105,7 +117,6 @@ class groupSubCfg(includableCfg):
                         append = True
             if append:
                 appendArgs.append(" ".join(j))
-                #print("debug point appendArgs", appendArgs)
 
     @property
     def buildOption(self):
