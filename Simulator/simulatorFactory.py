@@ -30,8 +30,10 @@ class simulatorFactory(object):
         available_simulators = self._detect_available_simulators()
         name_mapping = {simulator_class.name: simulator_class for simulator_class in self.supported_simulators()}
         if not available_simulators:
-            return None
-
+            raise RuntimeError(
+                ("Don't have available simulators. "
+                    "Supported simulators are %s")
+                % list(name_mapping.keys()))
         environ_name = "YASA_SIMULATOR"
         if environ_name in os.environ:
             simulator_name = os.environ[environ_name]
@@ -55,11 +57,14 @@ class simulatorFactory(object):
         #                    action="store_true",
         #                    default=False,
         #                    help=("Open test case(s) in simulator gui with top level pre loaded"))
-
-        #for sim in self.supported_simulators():
-        #    sim.add_arguments(parser, group)
-        simulator = self.select_simulator()
-        simulator.add_arguments(parser, group)
+        environ_name = "YASA_SIMULATOR"
+        if environ_name in os.environ:
+            simulator_name = os.environ[environ_name]
+        for sim in self.supported_simulators():
+            if sim == simulator_name:
+                sim.add_arguments(parser, group)
+        #simulator = self.select_simulator()
+        #simulator.add_arguments(parser, group)
 
     def __init__(self):
         pass
