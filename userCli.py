@@ -83,21 +83,21 @@ class userCli(object):
 
             self.parser.add_argument('-%s' % keyVar, **self.kwargs)
 
-if __name__ == '__main__':
-    import argparse
-    import sys
-
-    #print(vars(userCli.userCliSection()))
-    #userCli.userCliSection.walk(userCli.add_arguments())
-    parser = argparse.ArgumentParser()
-    userCli = userCli(parser)
-    userCli.addArguments()
-    args = parser.parse_args(sys.argv[1:])
-    userCli.setParsedArgs(args)
-    print(args)
-    print(args.prof)
-    print(args.vh)
-    print(args.wave_name)
-    print(userCli.compileOption())
-    print(userCli.simOption())
-    #print(args.sim_option)
+#if __name__ == '__main__':
+#    import argparse
+#    import sys
+#
+#    #print(vars(userCli.userCliSection()))
+#    #userCli.userCliSection.walk(userCli.add_arguments())
+#    parser = argparse.ArgumentParser()
+#    userCli = userCli(parser)
+#    userCli.addArguments()
+#    args = parser.parse_args(sys.argv[1:])
+#    userCli.setParsedArgs(args)
+#    print(args)
+#    print(args.prof)
+#    print(args.vh)
+#    print(args.wave_name)
+#    print(userCli.compileOption())
+#    print(userCli.simOption())
+#    #print(args.sim_option)
