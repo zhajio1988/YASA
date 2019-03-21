@@ -274,7 +274,6 @@ class yasaTop(object):
             verbosity = TestRunner.VERBOSITY_NORMAL
 
         runner = TestRunner(report,
-                            join(self._output_path, "test_output"),
                             verbosity=verbosity,
                             num_threads=self._args.num_threads,
                             fail_fast=self._args.fail_fast,
