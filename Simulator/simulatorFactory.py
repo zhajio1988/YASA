@@ -61,7 +61,7 @@ class simulatorFactory(object):
         if environ_name in os.environ:
             simulator_name = os.environ[environ_name]
         for sim in self.supported_simulators():
-            if sim == simulator_name:
+            if sim.name == simulator_name:
                 sim.add_arguments(parser, group)
         #simulator = self.select_simulator()
         #simulator.add_arguments(parser, group)

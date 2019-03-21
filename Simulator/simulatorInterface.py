@@ -165,8 +165,11 @@ def run_command(command, cwd=None):
     Run a command
     """
     try:
+        print("debug point process0")
         proc = Process(command, cwd=cwd)
+        print("debug point process1")        
         proc.consume_output()
+        print("debug point process2")
         return True
     except Process.NonZeroExitCode:
         pass
@@ -175,7 +178,6 @@ def run_command(command, cwd=None):
         print("Caught Ctrl-C shutting down")        
         proc.terminate()
     return False
-
 
 #def check_output1(command, cwd=None, env=None):
 #    """
