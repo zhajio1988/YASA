@@ -101,10 +101,10 @@ class TestReport(object):
         args.append("F=%i" % len(failed))
         args.append("T=%i" % total_tests)
 
-        self._printer.write(" (%s) %s (%.1f seconds)\n" %
+        self._printer.write(" (%s) %s (%.1f seconds)\n    %s" %
                             (" ".join(args),
                              result.name,
-                             result.time))
+                             result.time, result.log_file))
 
     def all_ok(self):
         """
@@ -266,6 +266,13 @@ class TestResult(object):
             return read_file(self._output_file_name)
 
         return "Failed to read output file: %s" % self._output_file_name
+
+    @property
+    def log_file(self):
+        if os.path.isfile(self._output_file_name):
+            return self._output_file_name
+        else:
+            return "Error, %s not exists" % self._output_file_name
 
     @property
     def passed(self):
