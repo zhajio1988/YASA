@@ -111,7 +111,6 @@ class TestRun(object):
         """
         Read test results from yasa_results file
         """
-
         results = {}
         for name in self._test_cases:
             results[name] = FAILED
@@ -120,7 +119,6 @@ class TestRun(object):
             return results
 
         test_results = ostools.read_file(file_name)
-        test_suite_done = False
 
         (userSimCheckFunc, userSimCheckFile) = userSimCheck()
         if userSimCheckFile:
@@ -128,7 +126,9 @@ class TestRun(object):
             from userSimCheck import userSimCheck as simCheck
             checker=simCheck()
         else:
-            checker=self._simulator_if.simCheck 
+            from Simulator.vcsInterface import vcsSimCheck
+            #checker=self._simulator_if.simCheck
+            checker=vcsSimCheck()
 
         checker.resetStatus()
         for line in test_results.splitlines():
