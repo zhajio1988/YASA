@@ -21,7 +21,6 @@
 Provided functionality to run a suite of test in a robust way
 """
 
-
 from __future__ import print_function
 
 import os
@@ -39,17 +38,16 @@ from hashing import hash_string
 
 LOGGER = logging.getLogger(__name__)
 
-class TestRunner(object):  # pylint: disable=too-many-instance-attributes
+class TestRunner(object):
     """
     Administer the execution of a list of test suites
     """
-
     VERBOSITY_QUIET = 0
     VERBOSITY_NORMAL = 1
     VERBOSITY_VERBOSE = 2
 
-    def __init__(self,  # pylint: disable=too-many-arguments
-                 report, output_path,
+    def __init__(self,
+                 report,
                  verbosity=VERBOSITY_NORMAL,
                  num_threads=1,
                  fail_fast=False,
@@ -60,14 +58,12 @@ class TestRunner(object):  # pylint: disable=too-many-instance-attributes
         self._abort = False
         self._local = threading.local()
         self._report = report
-        self._output_path = output_path
         assert verbosity in (self.VERBOSITY_QUIET,
                              self.VERBOSITY_NORMAL,
                              self.VERBOSITY_VERBOSE)
         self._verbosity = verbosity
         self._num_threads = num_threads
         self._stdout = sys.stdout
-        self._stdout_ansi = wrap(self._stdout, use_color=not no_color)
         self._stderr = sys.stderr
         self._dont_catch_exceptions = dont_catch_exceptions
         self._no_color = no_color
@@ -86,11 +82,6 @@ class TestRunner(object):  # pylint: disable=too-many-instance-attributes
         """
         Run a list of test suites
         """
-
-        if not exists(self._output_path):
-            os.makedirs(self._output_path)
-
-        self._create_test_mapping_file(test_suites)
 
         num_tests = 0
         for test_suite in test_suites:
@@ -152,19 +143,14 @@ class TestRunner(object):  # pylint: disable=too-many-instance-attributes
             try:
                 test_suite = scheduler.next()
 
-                output_path = create_output_path(self._output_path, test_suite.name)
-                output_file_name = join(output_path, "output.txt")
-
                 with self._stdout_lock():
                     for test_name in test_suite.test_names:
                         print("Starting %s" % test_name)
-                    print("Output file: %s" % relpath(output_file_name))
+                    #print("Output file: %s" % test_suite.test_result_file)
 
                 self._run_test_suite(test_suite,
                                      write_stdout,
-                                     num_tests,
-                                     output_path,
-                                     output_file_name)
+                                     num_tests)
 
             except StopIteration:
                 return
@@ -174,8 +160,8 @@ class TestRunner(object):  # pylint: disable=too-many-instance-attributes
                 if is_main:
                     LOGGER.debug("MainWorkerThread: Caught Ctrl-C shutting down")
                     raise
-                else:
-                    return
+
+                return
 
             finally:
                 if test_suite is not None:
@@ -190,49 +176,40 @@ class TestRunner(object):  # pylint: disable=too-many-instance-attributes
     def _run_test_suite(self,
                         test_suite,
                         write_stdout,
-                        num_tests,
-                        output_path,
-                        output_file_name):
+                        num_tests):
         """
         Run the actual test suite
         """
-        color_output_file_name = join(output_path, "output_with_color.txt")
-
-        output_file = None
-        color_output_file = None
+        #output_file = None
 
         start_time = ostools.get_time()
         results = self._fail_suite(test_suite)
 
         try:
-            ostools.renew_path(output_path)
-            output_file = wrap(open(output_file_name, "a+"), use_color=False)
-            output_file.seek(0)
-            output_file.truncate()
-
             if write_stdout:
-                self._local.output = Tee([self._stdout_ansi, output_file])
+                """
+                If write_stdout enable, use stdout, showing log in terminal
+                """
+                #self._local.output = Tee([self._stdout])
+                self._local.output = self._stdout
             else:
-                color_output_file = open(color_output_file_name, "w")
-                self._local.output = Tee([color_output_file, output_file])
-
-            def read_output():
                 """
-                Called to read the contents of the output file on demand
+                Open a dummy file os.devnull for writing log file to it, 
+                not showing log in terminal
+                If you want to save log in a file, use code below:
+                >>> output_file = open("xxx.log", "w")
+                >>> self._local.output = Tee([output_file])
                 """
-                output_file.flush()
-                prev = output_file.tell()
-                output_file.seek(0)
-                contents = output_file.read()
-                output_file.seek(prev)
-                return contents
+                devNull = open(os.devnull, "w")
+                self._local.output = devNull
+                #self._local.output = Tee([devNull])
 
-            results = test_suite.run(output_path=output_path,
-                                     read_output=read_output)
+            results = test_suite.run()
+
         except KeyboardInterrupt:
-            self._add_skipped_tests(test_suite, results, start_time, num_tests, output_file_name)
+            self._add_skipped_tests(test_suite, results, start_time, num_tests, test_suite.test_result_file)
             raise KeyboardInterrupt
-        except:  # pylint: disable=bare-except
+        except:
             if self._dont_catch_exceptions:
                 raise
 
@@ -241,58 +218,32 @@ class TestRunner(object):  # pylint: disable=too-many-instance-attributes
         finally:
             self._local.output = self._stdout
 
-            for fptr in [output_file, color_output_file]:
-                if fptr is None:
-                    continue
+            #for fptr in [output_file]:
+            #    if fptr is None:
+            #        continue
 
-                fptr.flush()
-                fptr.close()
+            #    fptr.flush()
+            #    fptr.close()
 
         any_not_passed = any(value != PASSED for value in results.values())
 
         with self._stdout_lock():
+            if (any_not_passed or self._is_verbose) and not self._is_quiet and not write_stdout:
+                #use stdout, print log file contents in terminal.
+                self._print_output(test_suite.test_result_file)
 
-            if (color_output_file is not None) and (any_not_passed or self._is_verbose) and not self._is_quiet:
-                self._print_output(color_output_file_name)
-
-            self._add_results(test_suite, results, start_time, num_tests, output_file_name)
+            self._add_results(test_suite, results, start_time, num_tests, test_suite.test_result_file)
 
             if self._fail_fast and any_not_passed:
                 self._abort = True
-
-    def _create_test_mapping_file(self, test_suites):
-        """
-        Create a file mapping test name to test output folder.
-        This is to allow the user to find the test output folder when it is hashed
-        """
-        mapping_file_name = join(self._output_path, "test_name_to_path_mapping.txt")
-
-        # Load old mapping to remember non-deleted test folders as well
-        # even when re-running only a single test case
-        if exists(mapping_file_name):
-            with open(mapping_file_name, "r") as fptr:
-                mapping = set(fptr.read().splitlines())
-        else:
-            mapping = set()
-
-        for test_suite in test_suites:
-            test_output = create_output_path(self._output_path, test_suite.name)
-            mapping.add("%s %s" % (basename(test_output), test_suite.name))
-
-        # Sort by everything except hash
-        mapping = sorted(mapping, key=lambda value: value[value.index(" "):])
-
-        with open(mapping_file_name, "w") as fptr:
-            for value in mapping:
-                fptr.write(value + "\n")
 
     def _print_output(self, output_file_name):
         """
         Print contents of output file if it exists
         """
-        with open(output_file_name, "r") as fread:
-            for line in fread.readlines():
-                self._stdout_ansi.write(line)
+        with open(output_file_name, "r") as fh:
+            for line in fh.readlines():
+                self._stdout.write(line)
 
     def _add_results(self, test_suite, results, start_time, num_tests, output_file_name):
         """
@@ -430,7 +381,6 @@ class TestScheduler(object):
 LEGAL_CHARS = string.printable
 ILLEGAL_CHARS = ' <>"|:*%?\\/#&;()'
 
-
 def _is_legal(char):
     """
     Return true if the character is legal to have in a file name
@@ -454,16 +404,3 @@ def create_output_path(output_path, test_suite_name):
 
     return join(output_path, full_name)
 
-def wrap(file_obj, use_color=True):
-    """
-    Wrap file_obj in another stream which handles ANSI color codes using colorama
-
-    NOTE:
-    imports colorama here to avoid dependency from setup.py importing YASA before colorama is installed
-    """
-    from colorama import AnsiToWin32
-
-    if use_color:
-        return AnsiToWin32(file_obj).stream
-
-    return AnsiToWin32(file_obj, strip=True, convert=False).stream
