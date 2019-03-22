@@ -153,7 +153,7 @@ class compileBuildBase(object):
         compilation command is a string of shell command, run in a python subprocess.
         when enable lsf subparser, insert lsf cmds at the top of shell command.
         """        
-        compileCmd = 'set -e; cd; cd -; chmod a+x pre_compile.csh compile.csh post_compile.csh; ./pre_compile.csh; ./compile.csh; ./post_compile.csh;'
+        compileCmd = 'set -e; chmod a+x pre_compile.csh compile.csh post_compile.csh; ./pre_compile.csh; ./compile.csh; ./post_compile.csh;'
         if self._args.subparsers == 'lsf':
             lsfOptions = self._args.lsfOptions
             return "bsub -Is "  + " ".join(lsfOptions) + '"%s"' % compileCmd 
@@ -203,7 +203,7 @@ class compileBuildBase(object):
         return simContent + ['-l sim.log']
 
     def simCmd(self):
-        simCmd = 'set -e; cd; cd -; chmod a+x pre_sim.csh sim.csh post_sim.csh; ./pre_sim.csh; ./sim.csh; ./post_sim.csh;'
+        simCmd = 'set -e; chmod a+x pre_sim.csh sim.csh post_sim.csh; ./pre_sim.csh; ./sim.csh; ./post_sim.csh;'
         if self._args.subparsers == 'lsf':
             lsfOptions = self._args.lsfOptions
             return "bsub -Is "  + " ".join(lsfOptions) + '"%s"' % simCmd 
