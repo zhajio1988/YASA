@@ -23,6 +23,8 @@ from utils import *
 import tbInfo
 from yasaCli import yasaCli
 from random import randint
+from exceptions import TestcaseUnknown
+from color_printer import COLOR_PRINTER
 
 class compileBuildBase(object):
     def __init__(self, cli=None, ini_file=None, simulator_if=None):
@@ -91,13 +93,16 @@ class compileBuildBase(object):
         testcases work dir list, uesd in yasaTop, 
         for creating testcasesuite 
         """
-        if not self.testList.check(self._args.test) and self._args.test:
-            print('test: %s is unknown' % self._args.test)
-            tbInfo.show('test')
-            raise ValueError('test: %s is unknown' % self._args.test)
-        elif self._args.show:
-            tbInfo.show(self._args.show)
-            sys.exit(0)
+        try:
+            if not self.testList.check(self._args.test) and self._args.test:
+                raise TestcaseUnknown(self._args.test)
+            elif self._args.show:
+                tbInfo.show(self._args.show)
+                sys.exit(0)
+        except TestcaseUnknown as err:
+                tbInfo.show('test')
+                COLOR_PRINTER.write('test: '  + str(err) + '\n', fg='ri')
+                sys.exit(1) 
 
     def generateSeed(self):
         """
@@ -125,7 +130,7 @@ class compileBuildBase(object):
             for item in self.buildCfg.preCompileOption(self._args.build):
                 f.write(item + '\n')
         with open(os.path.join(self._buildDir, 'compile.csh'), 'w') as f:
-            f.write('#!/bin/csh -fe\n')
+            f.write('#!/bin/sh -fe\n')
             f.write(self._simulator_if.compileExe() + ' \\' + '\n')
             for index, item in enumerate(self.compileCshContent()):
                 if index == len(self.compileCshContent())-1:
@@ -213,7 +218,12 @@ class compileBuildBase(object):
 class singleTestCompile(compileBuildBase):
     def __init__(self, cli=None, ini_file='', simulator_if=None):
         super(singleTestCompile, self).__init__(cli, ini_file, simulator_if)
-        self._build =  self.buildCfg.getBuild(self._args.build)
+        try:
+            self._build =  self.buildCfg.getBuild(self._args.build)
+        except buildUnknown as err:
+            tbInfo.show('build')
+            COLOR_PRINTER.write('build: '  + str(err) + '\n', fg='ri')
+            sys.exit(1)        
         self.setTestlist()
         self._check()
         self.generateSeed()
@@ -281,8 +291,18 @@ class groupTestCompile(compileBuildBase):
             self.groupCfg = readGroupCfgFile(group_file)
         else:
             self.groupCfg = readGroupCfgFile(defaultGroupFile())
-        self._group = self.groupCfg.testGroup.getGroup(self._args.group)
-        self._build =  self.buildCfg.getBuild(self._group.buildOption)
+        try:
+            self._group = self.groupCfg.testGroup.getGroup(self._args.group)
+            self._build =  self.buildCfg.getBuild(self._group.buildOption)
+        except groupUnknown as err:
+            tbInfo.show('group')
+            COLOR_PRINTER.write('group: '  + str(err) + '\n', fg='ri')
+            sys.exit(1)
+        except buildUnknown as err:
+            tbInfo.show('build')
+            COLOR_PRINTER.write('build: '  + str(err) + '\n', fg='ri')
+            sys.exit(1)
+        self._args.build = self._group.buildOption
         self._testcases = self.groupCfg.getTests(self._args.group)
         self.setTestlist()
 
@@ -339,17 +359,17 @@ class groupTestCompile(compileBuildBase):
                     createDir(dir)
                     self.createSimCsh(dir, i)
 
-if __name__ == '__main__':
-    import sys
-    from Simulator.vcsInterface import vcsInterface
-    simulator_if = vcsInterface()
-
-    cli = yasaCli("Yet another simulation architecture")
-    cli.parseArgs(sys.argv[1:])
-    #userCliCfg.compileOption(args)
-    #compile = singleTestCompile(cli,  simulator_if=simulator_if)
-    #compile.prepareEnv()
-    #compile.generateSeed()
-    compile = groupTestCompile(cli,  simulator_if=simulator_if)
-    compile.prepareEnv()
-    compile.generateSeed()
+#if __name__ == '__main__':
+#    import sys
+#    from Simulator.vcsInterface import vcsInterface
+#    simulator_if = vcsInterface()
+#
+#    cli = yasaCli("Yet another simulation architecture")
+#    cli.parseArgs(sys.argv[1:])
+#    #userCliCfg.compileOption(args)
+#    #compile = singleTestCompile(cli,  simulator_if=simulator_if)
+#    #compile.prepareEnv()
+#    #compile.generateSeed()
+#    compile = groupTestCompile(cli,  simulator_if=simulator_if)
+#    compile.prepareEnv()
+#    compile.generateSeed()
