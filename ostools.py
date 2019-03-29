@@ -28,6 +28,7 @@ import subprocess
 import threading
 import shutil
 import sys
+import signal
 try:
     # Python 3.x
     from queue import Queue, Empty
@@ -124,7 +125,8 @@ class Process(object):
             shell=True,
             bufsize=0,
             # Create new process group on POSIX, setpgrp does not exist on Windows
-            preexec_fn=os.setpgrp)  # pylint: disable=no-member
+            preexec_fn=os.setsid)
+            #preexec_fn=os.setpgrp)  # pylint: disable=no-member
         LOGGER.debug("Started process with pid=%i: '%s'", self._process.pid, (" ".join(self._cwd)))
 
         self._queue = InterruptableQueue()
@@ -210,6 +212,7 @@ class Process(object):
         # Let's be tidy and join the threads we've started.
         if self._process.poll() is None:
             LOGGER.debug("Terminating process with pid=%i", self._process.pid)
+            os.killpg(os.getpgid(self._process.pid), signal.SIGTERM)            
             self._process.terminate()
 
         if self._process.poll() is None:
@@ -230,6 +233,29 @@ class Process(object):
         self._reader.join()
         self._process.stdout.close()
         self._process.stdin.close()
+
+    def send_stop(self):
+        """
+        Kill process (:meth:`subprocess.Popen.terminate`).
+        Do not wait for command to complete.
+        """
+        LOGGER.debug('stopping process (pid=%s cmd="%s")', self._process.pid, self._cmd)
+        if self._process:
+            if self.is_alive():
+                LOGGER.debug('process is active -> sending SIGTERM')
+
+                try:
+                    try:
+                        self._process.terminate()
+                    except AttributeError:
+                        os.kill(self._process.pid, signal.SIGKILL)
+                except OSError as oserror:
+                    LOGGER.debug('exception in terminate:%s', oserror)
+
+            else:
+                LOGGER.debug('process was already stopped')
+        else:
+            LOGGER.debug('process was not started')
 
     def __del__(self):
         try:
