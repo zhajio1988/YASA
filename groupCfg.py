@@ -17,6 +17,7 @@
 # *******************************************************************************
 from baseCfg import *
 from copy import *
+from exceptions import groupUnknown
 
 class groupCfg(includableTopCfg):
     def __init__(self, name, section, parent=None):
@@ -26,7 +27,7 @@ class groupCfg(includableTopCfg):
     def getGroup(self, group=''):
         if group:
             if not group in self.subSection:
-                raise ValueError('group : %s is unknown' % group)
+                raise groupUnknown(group)
             groupSection = self.subSection[group]
         return groupSection
 
@@ -74,6 +75,12 @@ class groupSubCfg(includableCfg):
         tests = sanity3 -r 3 
         ```
         """
+        testsOpts = []
+        # when only one case in group, _buildInOpts['tests'] is string,
+        #should change to list for post processing
+        if isinstance(self._buildInOpts['tests'], str):
+            testsOpts.append(self._buildInOpts['tests'])
+            self._buildInOpts['tests'] = testsOpts
         for test in self._buildInOpts['tests']:
             appendArgs = []
             testList = test.split("-")
