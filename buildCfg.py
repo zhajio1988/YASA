@@ -17,6 +17,7 @@
 # *******************************************************************************
 from baseCfg import *
 from globals import *
+from exceptions import buildUnknown
 
 class buildCfg(buildBaseCfg):
     def __init__(self, name, section, parent=None):
@@ -37,7 +38,7 @@ class buildCfg(buildBaseCfg):
     def getBuild(self, build=''):
         if build:
             if not build in self.subSection:
-                raise ValueError('build : %s is unknown' % build)
+                raise buildUnknown(build)
             buildSection = self.subSection[build]
         else:
             buildSection = self.subSection[self.defaultBuild]
@@ -52,7 +53,7 @@ class buildSubCfg(buildBaseCfg):
     @property
     def testDir(self):
         try:
-            [testdir] = self._buildInOpts['testdir']
+            testdir = self._buildInOpts['testdir']
         except ValueError:
             return None
         else:
@@ -61,7 +62,7 @@ class buildSubCfg(buildBaseCfg):
     @property
     def twoStep(self):
         try:
-            [twostep] = self._buildInOpts['twostep']
+            twostep = self._buildInOpts['twostep']
         except ValueError:
             return None
         else:
