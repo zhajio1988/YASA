@@ -25,3 +25,19 @@ class CompileError(Exception):
     """
     An error occured when compiling a HDL file
     """
+
+class TestcaseUnknown(Exception):
+    def __init__(self, testCase):
+        super(TestcaseUnknown, self).__init__()
+        self.errorinfo = '%s is unknown!' % testCase
+
+    def __str__(self):
+        return self.errorinfo
+
+class buildUnknown(TestcaseUnknown):
+    def __init__(self, build):
+        super(buildUnknown, self).__init__(build)
+
+class groupUnknown(TestcaseUnknown):
+    def __init__(self, group):
+        super(groupUnknown, self).__init__(group)
