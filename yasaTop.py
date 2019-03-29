@@ -15,19 +15,15 @@
 # *
 # * Author: Jude Zhang, Email: zhajio.1988@gmail.com
 # *******************************************************************************
-import csv
 import sys
 import traceback
 import logging
 import os
-import copy
-from os.path import exists, abspath, join, basename, splitext, normpath, dirname
-from fnmatch import fnmatch
+from os.path import exists, abspath, join
 from database import PickledDataBase, DataBase
 import ostools
 from yasaCli import yasaCli
 from Simulator.simulatorFactory import SIMULATOR_FACTORY
-from Simulator.simulatorInterface import simulatorInterface
 from test_list import TestList
 from testCaseSuite import testcaseSuite
 from color_printer import (COLOR_PRINTER,
@@ -36,7 +32,6 @@ from test_runner import TestRunner
 from test_report import TestReport
 from exceptions import CompileError
 from compileBuild import singleTestCompile, groupTestCompile
-import tbInfo
 from about import version, doc
 
 LOGGER = logging.getLogger(__name__)
