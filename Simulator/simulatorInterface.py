@@ -159,23 +159,32 @@ def isfile(file_name):
 
     return os.path.basename(file_name) in os.listdir(os.path.dirname(file_name))
 
+#def run_command(command, cwd=None, env=None):
+#    """
+#    Run a command
+#    """
+#    try:
+#        proc = Process(command, cwd=cwd, env=env)
+#        proc.consume_output()
+#        return True
+#    except Process.NonZeroExitCode:
+#        pass
+#    return False
 
 def run_command(command, cwd=None):
     """
     Run a command
     """
     try:
-        print("debug point process0")
         proc = Process(command, cwd=cwd)
-        print("debug point process1")        
         proc.consume_output()
-        print("debug point process2")
         return True
     except Process.NonZeroExitCode:
         pass
     except KeyboardInterrupt:
         print()
-        print("Caught Ctrl-C shutting down")        
+        print("Caught Ctrl-C shutting down")
+        #proc.send_stop()
         proc.terminate()
     return False
 
