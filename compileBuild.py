@@ -267,7 +267,7 @@ class singleTestCompile(compileBuildBase):
         """
         set testcase list based on testcase loacation
         """        
-        if self._build.testDir is not None:
+        if self._build.testDir:
             self._testList.testDir = self._build.testDir
         else:
             self._testList.testDir = defaultTestDir()
@@ -318,7 +318,7 @@ class groupTestCompile(compileBuildBase):
     def setTestlist(self):
         for buildName in self.groupCfg.allBuild:
             build = self.buildCfg.getBuild(buildName)
-            if build.testDir is not None:
+            if build.testDir:
                 self._testList.testDir = build.testDir
             else:
                 self._testList.testDir = defaultTestDir()
