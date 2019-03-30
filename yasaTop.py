@@ -295,6 +295,5 @@ class Results(object):
         self._simulator_if.merge_coverage(file_name=file_name, args=args)
 
 if __name__ == '__main__':
-    import sys
     yasa = yasaTop(sys.argv[1:])
     yasa.main()
