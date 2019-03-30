@@ -129,7 +129,7 @@ class simulatorInterface(object):
         Execute compile step and prints status information and compile log file
         """
         try:
-            if run_command(cmd, buildDir):
+            if run_compile_command(cmd, buildDir):
                 printer.write("Compile passed", fg="gi")
                 printer.write("\n")
             else:
@@ -159,19 +159,19 @@ def isfile(file_name):
 
     return os.path.basename(file_name) in os.listdir(os.path.dirname(file_name))
 
-#def run_command(command, cwd=None, env=None):
-#    """
-#    Run a command
-#    """
-#    try:
-#        proc = Process(command, cwd=cwd, env=env)
-#        proc.consume_output()
-#        return True
-#    except Process.NonZeroExitCode:
-#        pass
-#    return False
-
 def run_command(command, cwd=None):
+    """
+    Run a command
+    """
+    try:
+        proc = Process(command, cwd=cwd)
+        proc.consume_output()
+        return True
+    except Process.NonZeroExitCode:
+        pass
+    return False
+
+def run_compile_command(command, cwd=None):
     """
     Run a command
     """
@@ -184,34 +184,5 @@ def run_command(command, cwd=None):
     except KeyboardInterrupt:
         print()
         print("Caught Ctrl-C shutting down")
-        #proc.send_stop()
         proc.terminate()
     return False
-
-#def check_output1(command, cwd=None, env=None):
-#    """
-#    Wrapper arround subprocess.check_output
-#    """
-#    try:
-#        output = subprocess.check_output(command,
-#                                         cwd=cwd,
-#                                         shell=True,
-#                                         stderr=subprocess.STDOUT)
-#    except subprocess.CalledProcessError as err:
-#        err.output = err.output.decode("utf-8")
-#        raise err
-#    return output.decode("utf-8")
-#
-#def check_output(command, cwd=None, env=None):
-#    """
-#    Wrapper arround subprocess.check_output
-#    """
-#    import easyprocess 
-#    try:
-#        with easyprocess(command, cwd=cwd, shell=True) as proc:
-#            print(proc.stdout.read())
-#
-#    except subprocess.CalledProcessError as err:
-#        err.output = err.output.decode("utf-8")
-#        raise err
-#    #return output.decode("utf-8")
