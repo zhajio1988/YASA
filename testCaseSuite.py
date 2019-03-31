@@ -125,10 +125,12 @@ class TestRun(object):
             sys.path.append(os.path.dirname(userSimCheckFile))
             from userSimCheck import userSimCheck as simCheck
             checker=simCheck()
-        else:
+        elif self._simulator_if.name =='vcs':
             from Simulator.vcsInterface import vcsSimCheck
-            #checker=self._simulator_if.simCheck
             checker=vcsSimCheck()
+        elif self._simulator_if.name =='irun':
+            from Simulator.incisiveInterface import irunSimCheck 
+            checker=irunSimCheck()
 
         checker.resetStatus()
         for line in test_results.splitlines():
