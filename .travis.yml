@@ -18,11 +18,12 @@ before_script:
 
 # command to run tests
 script:
+  -  alias YASAsim="python3 $PRJ_HOME/bin/YASA/yasaTop.py"
   -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -h
-  -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -doc
-  -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -show test
-  -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -show build
-  -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -show group
+  -  YASAsim -doc
+  -  YASAsim -show test
+  -  YASAsim -show build
+  -  YASAsim -show group
 
 after_script:
 - rm -f bin/vcs
