@@ -15,5 +15,4 @@ before_script:
 
 # command to run tests
 script:
-  -  source bin/bootenv.csh
-  -  YASAsim -h
+  -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -h
