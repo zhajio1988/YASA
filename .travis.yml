@@ -1,0 +1,18 @@
+language: python
+python:
+  - "3.6"
+  
+# command to install dependencies
+#install:
+#  - pip install -r requirements.txt
+
+before_script:
+- git clone https://github.com/zhajio1988/uvm_candy_lover.git
+- cd uvm_candy_lover/bin
+- git clone https://github.com/zhajio1988/YASA.git
+- cd ../
+- source bin/bootenv.csh
+
+# command to run tests
+script:
+  -  YASAsim -h
