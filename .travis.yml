@@ -13,7 +13,7 @@ before_script:
 - cd ../
 - touch bin/vcs
 - chmod +x bin/vcs
-- export PATH="bin/vcs":$PATH
+- export PATH="./bin":$PATH
 - source bin/bootenv.csh
 
 # command to run tests
@@ -23,3 +23,6 @@ script:
   -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -show test
   -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -show build
   -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -show group
+
+after_script:
+- rm -f bin/vcs
