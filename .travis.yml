@@ -18,7 +18,8 @@ before_script:
 
 # command to run tests
 script:
-  -  alias YASAsim="python3 $PRJ_HOME/bin/YASA/yasaTop.py"; YASAsim -doc
+  -  alias YASAsim="python3 $PRJ_HOME/bin/YASA/yasaTop.py"
+  -  YASAsim -doc
   -  python3 $PRJ_HOME/bin/YASA/yasaTop.py -h
   -  YASAsim -doc
   -  YASAsim -show test
