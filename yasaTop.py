@@ -130,8 +130,8 @@ class yasaTop(object):
             sys.exit(1)
         except CompileError:
             sys.exit(1)
-        except SystemExit:
-            sys.exit(1)
+        except SystemExit as e:
+            sys.exit(e.code)
         except: 
             if self._args.dont_catch_exceptions:
                 raise
