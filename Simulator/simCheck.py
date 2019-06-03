@@ -60,9 +60,7 @@ class simCheck(object):
                     if self._failStatus != 'FAIL':
                         self._failStatus = 'FAIL'
                         self._reasonMsg = string
-    
-     
-    
+
         for warnPattern in self._warnPatterns:
             if warnPattern.match(string):
                 excluded = filter(lambda x:x.match(string), self._excludeWarnPatterns)

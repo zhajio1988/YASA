@@ -135,12 +135,12 @@ class vcsSimCheck(simCheck):
     """    
     vcsErrorPattern = r'^Error-\[.*\]'    
     coreDumpPattern = r'Completed context dump phase'
-    simEndPattern = r' V C S   S i m u l a t i o n   R e p o r t'    
+    simEndPattern = r'V C S   S i m u l a t i o n   R e p o r t'
     timingViolationPattern = r'.*Timing violation.*'
 
     def __init__(self):
         super(vcsSimCheck, self).__init__()
         self._simEndPattern = re.compile(vcsSimCheck.simEndPattern)        
-        self.setExcludeWarnPatterns(vcsSimCheck.vcsErrorPattern)    
+        self.setExcludeWarnPatterns(vcsSimCheck.vcsErrorPattern)
         self.setErrPatterns(vcsSimCheck.coreDumpPattern)
-        self.setWarnPatterns(vcsSimCheck.timingViolationPattern)        
+        self.setWarnPatterns(vcsSimCheck.timingViolationPattern)
