@@ -58,11 +58,12 @@ class yasaTop(object):
         #if self._simulator_class is None:
         #    self._simulator_class = simulatorInterface()
 
-        self._create_output_path(self._args.clean)
+        #TODO: no usage
+        #self._create_output_path(self._args.clean)
 
         self._checkArgs(self._args)
 
-        database = self._create_database()
+        #database = self._create_database()
 
     def _checkArgs(self, args):
         """
