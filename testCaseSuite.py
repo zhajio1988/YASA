@@ -78,7 +78,9 @@ class TestRun(object):
         """
         results = {}
         for name in self._test_cases:
-            results[name] = FAILED
+            results[name] = {}
+            results[name]['reasonMsg'] = ''
+            results[name]['status'] = FAILED
 
         # Ensure result file exists
         ostools.write_file(get_result_file_name(self._testWordDir), "")
@@ -113,7 +115,9 @@ class TestRun(object):
         """
         results = {}
         for name in self._test_cases:
-            results[name] = FAILED
+            results[name] = {}
+            results[name]['reasonMsg'] = ''
+            results[name]['status'] = FAILED
 
         if not ostools.file_exists(file_name):
             return results
@@ -140,12 +144,13 @@ class TestRun(object):
 
         for test_name in self._test_cases:
             if status == 'PASS':
-                results[test_name] = PASSED
+                results[test_name]['status'] = PASSED
             else:
+                results[test_name]['reasonMsg'] = reasonMsg
                 if status == 'WARN':
-                    results[test_name] = WARNED
+                    results[test_name]['status'] = WARNED
                 elif status == 'FAIL':
-                    results[test_name] = FAILED
+                    results[test_name]['status'] = FAILED
 
         for test_name in results:
             if test_name not in self._test_cases:

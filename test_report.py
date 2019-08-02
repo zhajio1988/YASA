@@ -101,10 +101,12 @@ class TestReport(object):
         args.append("F=%i" % len(failed))
         args.append("T=%i" % total_tests)
 
-        self._printer.write(" (%s) %s (%.1f seconds)\n    %s" %
-                            (" ".join(args),
-                             result.name,
-                             result.time, result.log_file))
+        if result.fail_message != '':
+            self._printer.write(" (%s) %s (%.1f seconds)\n    FailMsg: %s\n    LogFile: %s" %
+                            (" ".join(args), result.name, result.time, result.fail_message, result.log_file))
+        else:
+            self._printer.write(" (%s) %s (%.1f seconds)\n    LogFile: %s" %
+                            (" ".join(args), result.name, result.time, result.log_file))            
 
     def all_ok(self):
         """
@@ -235,11 +237,9 @@ class TestStatus(object):
     def __repr__(self):
         return "TestStatus(%r)" % self._name
 
-
 PASSED = TestStatus("passed")
 WARNED = TestStatus("warned")
 FAILED = TestStatus("failed")
-
 
 class TestResult(object):
     """
@@ -247,7 +247,7 @@ class TestResult(object):
     """
 
     def __init__(self, name, status, time, output_file_name):
-        assert status in (PASSED,
+        assert status['status'] in (PASSED,
                           FAILED,
                           WARNED)
         self.name = name
@@ -275,16 +275,20 @@ class TestResult(object):
             return "Error, %s not exists" % self._output_file_name
 
     @property
+    def fail_message(self):
+        return self._status['reasonMsg'] 
+
+    @property
     def passed(self):
-        return self._status == PASSED
+        return self._status['status'] == PASSED
 
     @property
     def warned(self):
-        return self._status == WARNED
+        return self._status['status'] == WARNED
 
     @property
     def failed(self):
-        return self._status == FAILED
+        return self._status['status'] == FAILED
 
     def print_status(self, printer, padding=0):
         """
@@ -315,15 +319,17 @@ class TestResult(object):
             test.attrib["name"] = match.group(2)
         else:
             test.attrib["name"] = self.name
+
         test.attrib["time"] = "%.1f" % self.time
 
         # By default the output is stored in system-out
         system_out = ElementTree.SubElement(test, "system-out")
-        system_out.text = self.output
+        #system_out.text = self.output
+        system_out.text = self.log_file
 
         if self.failed:
             failure = ElementTree.SubElement(test, "failure")
-            failure.attrib["message"] = "Failed"
+            failure.attrib["message"] = self.fail_message 
 
             # Store output under <failure> if the 'bamboo' format is specified
             if xunit_xml_format == 'bamboo':
@@ -332,5 +338,5 @@ class TestResult(object):
 
         elif self.warned:
             warned = ElementTree.SubElement(test, "warning")
-            warned.attrib["message"] = "Warned"
+            warned.attrib["message"] = self.fail_message 
         return test

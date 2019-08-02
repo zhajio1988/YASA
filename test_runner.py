@@ -170,7 +170,7 @@ class TestRunner(object):
     def _add_skipped_tests(self, test_suite, results, start_time, num_tests, output_file_name):
         for name in test_suite.test_names:
             #TODO: set case not run as failed case
-            results[name] = FAILED
+            results[name]['status'] = FAILED
         self._add_results(test_suite, results, start_time, num_tests, output_file_name)
 
     def _run_test_suite(self,
@@ -225,7 +225,7 @@ class TestRunner(object):
             #    fptr.flush()
             #    fptr.close()
 
-        any_not_passed = any(value != PASSED for value in results.values())
+        any_not_passed = any(value['status'] != PASSED for value in results.values())
 
         with self._stdout_lock():
             if (any_not_passed or self._is_verbose) and not self._is_quiet and not write_stdout:
@@ -266,7 +266,9 @@ class TestRunner(object):
         """ Return failure for all tests in suite """
         results = {}
         for test_name in test_suite.test_names:
-            results[test_name] = FAILED
+            results[test_name] = {}
+            results[test_name]['reasonMsg'] = ''
+            results[test_name]['status'] = FAILED
         return results
 
     @contextmanager
