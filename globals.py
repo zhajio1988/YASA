@@ -1,5 +1,7 @@
 import os
 import grp
+import sys
+from color_printer import COLOR_PRINTER
 
 def checkEnv():
     if not 'PRJ_HOME' in os.environ:
@@ -8,13 +10,28 @@ def checkEnv():
 checkEnv()
 
 def defaultCliCfgFile():
-    return os.path.join(os.environ['PRJ_HOME'], 'bin', 'userCli.cfg')
+    cliFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'userCli.cfg')
+    if os.path.exists(cliFile):
+        return cliFile
+    else:
+        COLOR_PRINTER.write("%s doesn't exist!\n" % cliFile, fg='ri')
+        sys.exit(1)
 
 def defaultBuildFile():
-    return os.path.join(os.environ['PRJ_HOME'], 'bin', 'build.cfg')
+    buildFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'build.cfg')
+    if os.path.exists(buildFile):
+        return buildFile
+    else:
+        COLOR_PRINTER.write("%s doesn't exist!\n" % buildFile, fg='ri')
+        sys.exit(1)
 
 def defaultGroupFile():
-    return os.path.join(os.environ['PRJ_HOME'], 'bin', 'group.cfg')
+    groupFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'group.cfg')
+    if os.path.exists(groupFile):
+        return groupFile 
+    else:
+        COLOR_PRINTER.write("%s doesn't exist!\n" % groupFile, fg='ri')
+        sys.exit(1)
 
 def defaultTestListFile():
     return 'test.f'
