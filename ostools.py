@@ -212,7 +212,14 @@ class Process(object):
         # Let's be tidy and join the threads we've started.
         if self._process.poll() is None:
             LOGGER.debug("Terminating process with pid=%i", self._process.pid)
-            os.killpg(os.getpgid(self._process.pid), signal.SIGTERM)            
+            #os.killpg(os.getpgid(self._process.pid), signal.SIGTERM)            
+
+            pgid = os.getpgid(self._process.pid)
+            if pgid == 1:
+                os.kill(self._process.pid, signal.SIGTERM)
+            else:
+                os.killpg(os.getpgid(self._process.pid), signal.SIGTERM) 
+
 
         #if self._process.poll() is None:
         #    time.sleep(0.05)
@@ -221,6 +228,27 @@ class Process(object):
         #    LOGGER.debug("Killing process with pid=%i", self._process.pid)
         #    #os.killpg(os.getpgid(self._process.pid), signal.SIGTERM)
         #    #os.killpg(self._process.pid, signal.SIGTERM)
+        #    self._process.kill()
+
+        #if self._process.poll() is None:
+        #    LOGGER.debug("Terminating process with pid=%i", self._process.pid)
+        #    self._process.terminate()
+
+        #if self._process.poll() is None:
+        #    time.sleep(0.05)
+
+        if self._process.poll() is None:
+            LOGGER.debug("1Terminating process with pid=%i", self._process.pid)
+            #os.killpg(os.getpgid(self._process.pid), signal.SIGTERM) 
+            pgid = os.getpgid(self._process.pid)
+            if pgid == 1:
+                LOGGER.debug("2Terminating process with pid=%i", self._process.pid)
+                os.kill(self._process.pid, signal.SIGTERM)
+            else:
+                os.killpg(os.getpgid(self._process.pid), signal.SIGTERM) 
+
+        #if self._process.poll() is None:
+        #    LOGGER.debug("Killing process with pid=%i", self._process.pid)
         #    self._process.kill()
 
         if self._process.poll() is None:
@@ -287,6 +315,7 @@ class AsynchronousFileReader(threading.Thread):
         """The body of the thread: read lines and put them on the queue."""
         for line in iter(self._fd.readline, ''):
             if PROGRAM_STATUS.is_shutting_down:
+                self._queue.put(None)
                 break
 
             # Convert string into utf-8 if necessary
