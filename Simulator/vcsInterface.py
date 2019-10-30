@@ -12,6 +12,9 @@ from .simulatorInterface import (simulatorInterface, run_command)
 from .simCheck import *
 
 LOGGER = logging.getLogger(__name__)
+import sys
+sys.path.append("../")
+from globals import *
 
 class waveArgsAction(argparse.Action):
     """
@@ -40,11 +43,11 @@ class covArgsAction(argparse.Action):
         args.cov = values
         #TODO: Add -cm_dir and -cm_name options
         if args.cov == 'all':
-            appendAttr(args, 'compileOption', '-cm line+cond+fsm+tgl+branch+assert')
+            appendAttr(args, 'compileOption', '-cm_dir %s -cm line+cond+fsm+tgl+branch+assert' %(defaultCovDir()))
             appendAttr(args, 'simOption', '-cm line+cond+fsm+tgl+branch+assert')
             appendAttr(args, 'simOption', '+FCOV_EN')
         else:
-            appendAttr(args, 'compileOption', '-cm ' + args.cov)
+            appendAttr(args, 'compileOption', '-cm_dir ' + defaultCovDir() + ' -cm ' + args.cov)
             appendAttr(args, 'simOption', '-cm ' + args.cov)
             appendAttr(args, 'simOption', ' +FCOV_EN')
 

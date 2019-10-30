@@ -173,6 +173,8 @@ class compileBuildBase(object):
         with open(os.path.join(testcaseDir, 'pre_sim.csh'), 'w') as f:
             for item in self.buildCfg.preSimOption(self._args.build):
                 f.write(item + '\n')
+            if len(self.buildCfg.preSimOption(self._args.build)) >=1 :
+                f.write(self._args.test + '\n')
         with open(os.path.join(testcaseDir, 'sim.csh'), 'w') as f:
             #FIXME: if add shebang line, will cause */simv: No match. shell error
             #f.write('#!/bin/csh -fe\n')  
@@ -191,6 +193,8 @@ class compileBuildBase(object):
                             f.write('\t' + '+ntb_random_seed=%s' % seed + ' \\' + '\n')
                         elif self._simulator_if.name == 'irun':
                             f.write('\t' + '-svseed %s' % seed + ' \\' + '\n')
+                    if self._args.cov:
+                            f.write('\t' + '-cm_name %s' % self._args.test + '__' + str(seed) + ' \\' + '\n')
                     f.write('\t' + item + '\n')
                 else:
                     f.write('\t' + item + ' \\' + '\n')
