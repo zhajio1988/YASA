@@ -201,7 +201,7 @@ class yasaTop(object):
             self._compile(compile._buildDir, compile.compileCmd(), simulator_if)
 
         start_time = ostools.get_time()
-        report = TestReport(printer=self._printer)
+        report = TestReport(printer=self._printer, filePath=compile._buildDir)
 
         try:
             self._run_test(test_list, report)

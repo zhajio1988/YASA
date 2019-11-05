@@ -33,12 +33,15 @@ class TestReport(object):
     """
     Collect reports from running testcases
     """
-    def __init__(self, printer=COLOR_PRINTER):
+    def __init__(self, printer=COLOR_PRINTER, filePath="./"):
         self._test_results = {}
         self._test_names_in_order = []
         self._printer = printer
+        self._filePath = filePath
         self._real_total_time = 0.0
         self._expected_num_tests = 0
+        self.fp = open(os.path.join(self._filePath, "test_status.hud"), "w+", encoding="utf-8")
+        self.fp.write("HVP metric = test\n")
 
     def set_real_total_time(self, real_total_time):
         """
@@ -88,11 +91,15 @@ class TestReport(object):
         passed, failed, warned = self._split()
         if result.passed:
             self._printer.write("pass", fg='gi')
+            self.fp.write("%s = pass\n" % result.name)
         elif result.failed:
             self._printer.write("fail", fg='ri')
+            self.fp.write("%s = fail\n" % result.name)
         elif result.warned:
             self._printer.write("warn", fg='rgi')
+            self.fp.write("%s = warn\n" % result.name)            
         else:
+            self.fp.write("%s = unknown\n" % result.name)
             assert False
 
         args = []
@@ -170,6 +177,7 @@ class TestReport(object):
         else:
             self._printer.write("All passed!", fg='gi')
         self._printer.write("\n")
+        self.fp.close();
 
         assert len(all_tests) <= self._expected_num_tests
         if len(all_tests) < self._expected_num_tests:
