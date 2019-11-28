@@ -7,6 +7,7 @@ import subprocess
 from ostools import Process, simplify_path
 from exceptions import CompileError
 from color_printer import NO_COLOR_PRINTER
+from threading import Timer
 
 class simulatorInterface(object):
     """
@@ -20,6 +21,7 @@ class simulatorInterface(object):
 
     def __init__(self):
         self._output_path = ''
+        self.sim_timeout = 3600
 
     @property
     def output_path(self):
@@ -109,27 +111,27 @@ class simulatorInterface(object):
         """
         pass
 
-    def compile(self, buildDir, cmd, printer=NO_COLOR_PRINTER):
+    def compile(self, buildDir, cmd, printer=NO_COLOR_PRINTER, timeout=1800):
         """
         Compile the project
         """
         self.add_simulator_specific()
-        self.executeCompile(buildDir, cmd, printer)
+        self.executeCompile(buildDir, cmd, printer, timeout)
 
-    def simulate(self, testWordDir,  simCmd):
-        self.executeSimulataion(testWordDir,  simCmd)
+    def simulate(self, testWordDir, simCmd):
+        self.executeSimulataion(testWordDir,  simCmd, self.sim_timeout)
 
-    def executeSimulataion(self, testcaseDir, simCmd):
+    def executeSimulataion(self, testcaseDir, simCmd, timeout):
         """
         Simulate
         """
 
-    def executeCompile(self, buildDir, cmd, printer=NO_COLOR_PRINTER):
+    def executeCompile(self, buildDir, cmd, printer, timeout):
         """
         Execute compile step and prints status information and compile log file
         """
         try:
-            if run_compile_command(cmd, buildDir):
+            if run_compile_command(cmd, buildDir, timeout):
                 printer.write("Compile passed", fg="gi")
                 printer.write("\n")
             else:
@@ -159,30 +161,45 @@ def isfile(file_name):
 
     return os.path.basename(file_name) in os.listdir(os.path.dirname(file_name))
 
-def run_command(command, cwd=None):
+def run_command(command, cwd=None, timeout=1800):
     """
     Run a command
     """
     try:
         proc = Process(command, cwd=cwd)
+        t = Timer(timeout, lambda: kill(proc))
+        t.start()
         proc.consume_output()
+        t.cancel() 
         return True
     except Process.NonZeroExitCode:
+        t.cancel()        
         pass
+    except KeyboardInterrupt:
+        t.cancel()        
+        raise KeyboardInterrupt
     return False
 
-def run_compile_command(command, cwd=None):
+def run_compile_command(command, cwd, timeout):
     """
     Run a command
     """
     try:
         proc = Process(command, cwd=cwd)
+        t = Timer(timeout, lambda: kill(proc))
+        t.start()
         proc.consume_output()
+        t.cancel()        
         return True
     except Process.NonZeroExitCode:
+        t.cancel()
         pass
     except KeyboardInterrupt:
         print()
         print("Caught Ctrl-C shutting down")
+        t.cancel()        
         proc.terminate()
     return False
+
+def kill(proc):
+    proc.terminate()

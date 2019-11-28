@@ -106,7 +106,8 @@ class TestRunner(object):
         try:
             sys.stdout = ThreadLocalOutput(self._local, self._stdout)
             sys.stderr = ThreadLocalOutput(self._local, self._stdout)
-
+            fixed_size = 16 * 1024 * 1024   # 16M
+            threading.stack_size(fixed_size)
             # Start P-1 worker threads
             for _ in range(self._num_threads - 1):
                 new_thread = threading.Thread(target=self._run_thread,
@@ -127,6 +128,7 @@ class TestRunner(object):
         finally:
             for thread in threads:
                 thread.join()
+            threading.stack_size(0)            
 
             sys.stdout = self._stdout
             sys.stderr = self._stderr
@@ -217,6 +219,7 @@ class TestRunner(object):
                 traceback.print_exc()
         finally:
             self._local.output = self._stdout
+            devNull.close()            
 
             #for fptr in [output_file]:
             #    if fptr is None:

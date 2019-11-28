@@ -189,6 +189,7 @@ class yasaTop(object):
         or running a group of testcases(each testcase with specified option) 
         """
         simulator_if = self._create_simulator_if()
+        simulator_if.sim_timeout = self._args.sim_timeout;
 
         if self._args.group:
             compile = groupTestCompile(cli=self._cli, simulator_if=simulator_if)
@@ -255,7 +256,7 @@ class yasaTop(object):
         """
         Compile entire tb
         """
-        simulator_if.compile(buildDir, cmd, self._printer)
+        simulator_if.compile(buildDir, cmd, self._printer, self._args.comp_timeout)
 
     def _run_test(self, test_cases, report):
         """

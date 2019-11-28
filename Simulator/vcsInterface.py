@@ -28,12 +28,12 @@ class waveArgsAction(argparse.Action):
     def __call__(self, parser, args, values, option = None):
         args.wave = values
         if args.wave == 'vpd':
-            appendAttr(args, 'compileOption', '-lca -kdb -debug_access+pp +define+DUMP_VPD')
+            appendAttr(args, 'compileOption', '-kdb -debug_access+pp +define+DUMP_VPD')
         elif args.wave == 'fsdb':
-            appendAttr(args, 'compileOption', '-lca -kdb -debug_access+pp +define+DUMP_FSDB')
+            appendAttr(args, 'compileOption', '-kdb -debug_access+pp +define+DUMP_FSDB')
         elif args.wave == 'gui':
-            appendAttr(args, 'compileOption', '-lca -kdb -debug_access+all +define+DUMP_FSDB')
-            appendAttr(args, 'simOption', '-lca  -verdi')
+            appendAttr(args, 'compileOption', '-kdb -debug_access+all +define+DUMP_FSDB')
+            appendAttr(args, 'simOption', '-verdi')
 
 class covArgsAction(argparse.Action):
     """
@@ -104,7 +104,6 @@ class vcsInterface(simulatorInterface):
 
     def __init__(self):
         simulatorInterface.__init__(self)
-        #self._simCheck = vcsSimCheck()
 
     @property
     def simCheck(self):
@@ -126,8 +125,8 @@ class vcsInterface(simulatorInterface):
         return 'simv'
 
 
-    def executeSimulataion(self, testWordDir, simCmd):
-        if not run_command(simCmd, cwd=testWordDir):
+    def executeSimulataion(self, testWordDir, simCmd, timeout):
+        if not run_command(simCmd, testWordDir, timeout):
             return False
         else:
             return True

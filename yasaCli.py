@@ -202,9 +202,23 @@ def _create_argument_parser(description=None, for_documentation=False):
                               'Test output is not continuously written in verbose mode with p > 1'))
 
     argParser.add_argument("-u", "-unique_sim",
-                        action="store_true",
-                        dest='unique_sim',
-                        help="Do not re-use the same simulator process for running different test cases (slower)")
+                          action="store_true",
+                          dest='unique_sim',
+                          help="Do not re-use the same simulator process for running different test cases (slower)")
+    
+    argParser.add_argument('-comp_timeout', type=positive_int, 
+                            nargs='?',   
+                            dest ='comp_timeout',
+                            action = 'store', 
+                            const=3600,  default=3600,
+                            help="set compile subprocess watchdog timer")
+
+    argParser.add_argument('-sim_timeout', type=positive_int, 
+                            nargs='?',   
+                            dest ='sim_timeout',
+                            action = 'store', 
+                            const=3600,  default=3600,
+                            help="set simulation subprocess watchdog timer")
 
     #argParser.add_argument("-export-json",
     #                    default=None,

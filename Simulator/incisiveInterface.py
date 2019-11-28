@@ -101,15 +101,15 @@ class incisiveInterface(simulatorInterface):
         """
         return 'irun'
 
-    def executeCompile(self, buildDir, cmd, printer):
+    def executeCompile(self, buildDir, cmd, printer, timeout):
         """
         Incisive doesn't need compile step, so override this function
         in base class, then do nothing 
         """
         pass
 
-    def executeSimulataion(self, testWordDir, simCmd):
-        if not run_command(simCmd, cwd=testWordDir):
+    def executeSimulataion(self, testWordDir, simCmd, timeout):
+        if not run_command(simCmd, testWordDir, timeout):
             return False
         else:
             return True
