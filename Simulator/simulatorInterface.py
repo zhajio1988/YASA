@@ -202,4 +202,5 @@ def run_compile_command(command, cwd, timeout):
     return False
 
 def kill(proc):
+    print('Subprocess probably got killed by timeout!')
     proc.terminate()
