@@ -183,7 +183,7 @@ class TestRunner(object):
         Run the actual test suite
         """
         #output_file = None
-
+        devNull = None
         start_time = ostools.get_time()
         results = self._fail_suite(test_suite)
 
@@ -219,7 +219,8 @@ class TestRunner(object):
                 traceback.print_exc()
         finally:
             self._local.output = self._stdout
-            devNull.close()            
+            if devNull != None:
+                devNull.close()            
 
             #for fptr in [output_file]:
             #    if fptr is None:

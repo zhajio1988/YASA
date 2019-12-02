@@ -177,7 +177,7 @@ def run_command(command, cwd=None, timeout=1800):
         pass
     except KeyboardInterrupt:
         t.cancel()        
-        raise KeyboardInterrupt
+        raise
     return False
 
 def run_compile_command(command, cwd, timeout):
@@ -202,4 +202,5 @@ def run_compile_command(command, cwd, timeout):
     return False
 
 def kill(proc):
+    print('Subprocess probably got killed by timeout!')
     proc.terminate()
