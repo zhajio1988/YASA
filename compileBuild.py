@@ -165,7 +165,7 @@ class compileBuildBase(object):
         else:
             return compileCmd
 
-    def createSimCsh(self, testcaseDir, seed):
+    def createSimCsh(self, testcaseDir, seed, isGroup):
         """
         simulation cshell file content, can be from build.cfg file, userCli 
         and argparse namespace
@@ -195,7 +195,10 @@ class compileBuildBase(object):
                             f.write('\t' + '-svseed %s' % seed + ' \\' + '\n')
                     if self._args.cov:
                             f.write('\t' + '-cm_name %s' % self._args.test + '__' + str(seed) + ' \\' + '\n')
-                    f.write('\t' + item + '\n')
+                    if isGroup:
+                        f.write('\t' + item + ' >& /dev/null\n')                        
+                    else:
+                        f.write('\t' + item + '\n')
                 else:
                     f.write('\t' + item + ' \\' + '\n')
         with open(os.path.join(testcaseDir, 'post_sim.csh'), 'w') as f:
@@ -286,7 +289,10 @@ class singleTestCompile(compileBuildBase):
             dir = os.path.join(self._testcaseRootDir, self._args.test + '__' + str(i))
             self._testcasesDir.append(dir)
             createDir(dir)
-            self.createSimCsh(dir, i)
+            if len(self._seeds) >= 2:
+                self.createSimCsh(dir, i, 1)
+            else:
+                self.createSimCsh(dir, i, 0)
 
 class groupTestCompile(compileBuildBase):
     def __init__(self, cli=None, group_file='', build_file='', simulator_if=None):
@@ -361,7 +367,7 @@ class groupTestCompile(compileBuildBase):
                     dir = os.path.join(self._groupRootDir, k + '__' + self._args.test + '__' + str(i))
                     self._testcasesDir.append(dir)
                     createDir(dir)
-                    self.createSimCsh(dir, i)
+                    self.createSimCsh(dir, i, 1)
 
 #if __name__ == '__main__':
 #    import sys
