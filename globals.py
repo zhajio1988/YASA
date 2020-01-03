@@ -8,6 +8,8 @@ def checkEnv():
         raise EnvironmentError('$YASA_SIMULATOR=%s is not inside supported tools["vcs", "irun", "xrun"]' % os.environ['YASA_SIMULATOR'])    
     if not 'PRJ_HOME' in os.environ:
         raise EnvironmentError('$PRJ_HOME is not defined')
+    if not 'TEMP_ROOT' in os.environ:
+        raise EnvironmentError('$TEMP_ROOT is not defined')
 
 checkEnv()
 
