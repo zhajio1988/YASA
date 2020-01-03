@@ -104,6 +104,7 @@ class vcsInterface(simulatorInterface):
 
     def __init__(self):
         simulatorInterface.__init__(self)
+        self._simCheck = vcsSimCheck()
 
     @property
     def simCheck(self):

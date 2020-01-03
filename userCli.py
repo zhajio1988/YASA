@@ -45,7 +45,7 @@ class userCli(object):
             keyVar = key.replace('$', '') if not key.find('$') else key
             if hasattr(args, keyVar) and getattr(args, keyVar):
                 for k, v in self.section[key].items():
-                    if '$' in v:
+                    if '$' in v and '$' in key:
                         v = v.replace(key, getattr(args, keyVar))
                     if 'compile_option' == k:
                         argsList = argsList + v if isinstance(v, list) else argsList + [v]
@@ -59,7 +59,7 @@ class userCli(object):
             keyVar = key.replace('$', '') if not key.find('$') else key
             if hasattr(args, keyVar) and getattr(args, keyVar):
                 for k, v in self.section[key].items():
-                    if '$' in v:
+                    if '$' in v and '$' in key:
                         v = v.replace(key, getattr(args, keyVar))
                     if 'sim_option' == k:
                         argsList = argsList + v if isinstance(v, list) else argsList + [v]

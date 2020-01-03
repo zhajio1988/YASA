@@ -5,6 +5,7 @@ Create simulator instances
 import os
 from .vcsInterface import vcsInterface
 from .incisiveInterface import incisiveInterface
+from .xceliumInterface import xceliumInterface
 #from .simulatorInterface import (BooleanOption, ListOfStringOption)
 
 class simulatorFactory(object):
@@ -20,6 +21,7 @@ class simulatorFactory(object):
         #TODO: add simulator interface here
         return [vcsInterface,
                 incisiveInterface,
+                xceliumInterface,
                 ]
 
     def select_simulator(self):

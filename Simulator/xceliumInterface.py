@@ -1,5 +1,5 @@
 """
-Interface for the Cadence Incisive simulator
+Interface for the Cadence Xcelium simulator
 """
 import os
 import re
@@ -59,12 +59,12 @@ class testArgsAction(argparse.Action):
         if args.test:
             appendAttr(args, 'simOption', '+UVM_TESTNAME=%s' % args.test)
 
-class incisiveInterface(simulatorInterface):
+class xceliumInterface(simulatorInterface):
     """
-    Interface for the Cadence Incisive simulator
+    Interface for the Cadence Xcelium simulator
     """
 
-    name = "irun"
+    name = "xrun"
     supports_gui_flag = True
 
     @staticmethod
@@ -88,13 +88,13 @@ class incisiveInterface(simulatorInterface):
     @classmethod
     def find_prefix_from_path(cls):
         """
-        Find irun simulator from PATH environment variable
+        Find xrun simulator from PATH environment variable
         """
-        return cls.find_toolchain(['irun'])
+        return cls.find_toolchain(['xrun'])
 
     def __init__(self):
         simulatorInterface.__init__(self)
-        self._simCheck = irunSimCheck()
+        self._simCheck = xrunSimCheck()
 
     @property
     def simCheck(self):
@@ -102,22 +102,22 @@ class incisiveInterface(simulatorInterface):
 
     def compileExe(self):
         """
-        Returns Incisive compile executable cmd
+        Returns Xcelium compile executable cmd
         """
-        return 'irun'
+        return 'xrun'
 
     def simExe(self):
         """
-        Returns Incisive simv executable cmd
+        Returns Xcelium simv executable cmd
         """
-        return 'irun'
+        return 'xrun'
 
-    def executeCompile(self, buildDir, cmd, printer, timeout):
-        """
-        Incisive doesn't need compile step, so override this function
-        in base class, then do nothing 
-        """
-        pass
+    #def executeCompile(self, buildDir, cmd, printer, timeout):
+    #    """
+    #    Xcelium doesn't need compile step, so override this function
+    #    in base class, then do nothing 
+    #    """
+    #    pass
 
     def executeSimulataion(self, testWordDir, simCmd, timeout):
         if not run_command(simCmd, testWordDir, timeout):
@@ -125,18 +125,18 @@ class incisiveInterface(simulatorInterface):
         else:
             return True
 
-class irunSimCheck(simCheck):
+class xrunSimCheck(simCheck):
     """
-    Irun specified simulation results checker
+    xrun specified simulation results checker
     """  
-    irunErrorPattern = r'^Error-\[.*\]'    
+    xrunErrorPattern = r'^Error-\[.*\]'    
     coreDumpPattern = r'Completed context dump phase'
-    simEndPattern = r'ncsim> exit'    
+    simEndPattern = r'xcelium> exit'    
     timingViolationPattern = r'.*Timing violation.*'
 
     def __init__(self):
-        super(irunSimCheck, self).__init__()
-        self._simEndPattern = re.compile(irunSimCheck.simEndPattern)        
-        self.setErrPatterns(irunSimCheck.irunErrorPattern)    
-        self.setErrPatterns(irunSimCheck.coreDumpPattern)
-        self.setWarnPatterns(irunSimCheck.timingViolationPattern)        
+        super(xrunSimCheck, self).__init__()
+        self._simEndPattern = re.compile(xrunSimCheck.simEndPattern)        
+        self.setErrPatterns(xrunSimCheck.xrunErrorPattern)    
+        self.setErrPatterns(xrunSimCheck.coreDumpPattern)
+        self.setWarnPatterns(xrunSimCheck.timingViolationPattern)        

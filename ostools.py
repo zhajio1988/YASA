@@ -212,10 +212,10 @@ class Process(object):
         if self._process.poll() is None:
             process = psutil.Process(self._process.pid)
             proc_list = process.children(recursive=True)
-            proc_list.reverse()
+            #proc_list.reverse()
             for proc in proc_list:
                 proc.kill()
-            #process.kill()
+            process.kill()
 
         # Let's be tidy and join the threads we've started.
         if self._process.poll() is None:

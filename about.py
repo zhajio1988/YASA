@@ -42,9 +42,9 @@ Copyright 2003-2013 Synopsys, Inc. All Rights Reserved
 You are licensed only to use thise products
 for which you have lawfully obtained a valid license key.
 
-irun
+irun/xrun
 -----
-Incisive is a product of Cadence Design Systems, Inc.
+Incisive/Xcelium is a product of Cadence Design Systems, Inc.
 (c) Copyright 1995-2014 Cadence Design Systems, Inc. All Rights Reserved
 You are licensed only to use thise products
 for which you have lawfully obtained a valid license key.

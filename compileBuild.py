@@ -181,6 +181,8 @@ class compileBuildBase(object):
             f.write('#!/bin/sh -fe\n')  
             if self._simulator_if.name == 'irun':
                 f.write(self._simulator_if.simExe() + ' \\' + '\n')
+            elif self._simulator_if.name == 'xrun':
+                f.write(self._simulator_if.simExe() + " -R -xmlibdirname " + os.path.join(self._buildDir, "xcelium.d") + ' \\' + '\n')
             else:
                 f.write(os.path.join(self._buildDir, self._simulator_if.simExe()) + ' \\' + '\n')
             for index, item in enumerate(self.simCshContent()):
@@ -191,9 +193,9 @@ class compileBuildBase(object):
                     if self._args.seed == 0: 
                         if self._simulator_if.name == 'vcs':
                             f.write('\t' + '+ntb_random_seed=%s' % seed + ' \\' + '\n')
-                        elif self._simulator_if.name == 'irun':
+                        elif self._simulator_if.name in ['irun', 'xrun' ]:
                             f.write('\t' + '-svseed %s' % seed + ' \\' + '\n')
-                    if self._args.cov:
+                    if self._args.cov and self._simulator_if.name == 'vcs':
                             f.write('\t' + '-cm_name %s' % self._args.test + '__' + str(seed) + ' \\' + '\n')
                     if isGroup:
                         f.write('\t' + item + ' >& /dev/null\n')                        

@@ -1,37 +1,36 @@
 import os
 import grp
-import sys
-from color_printer import COLOR_PRINTER
 
 def checkEnv():
+    if not 'YASA_SIMULATOR' in os.environ:
+        raise EnvironmentError('$YASA_SIMULATOR is not defined')
+    elif not os.environ['YASA_SIMULATOR'] in ['vcs','irun','xrun']:
+        raise EnvironmentError('$YASA_SIMULATOR=%s is not inside supported tools["vcs", "irun", "xrun"]' % os.environ['YASA_SIMULATOR'])    
     if not 'PRJ_HOME' in os.environ:
         raise EnvironmentError('$PRJ_HOME is not defined')
 
 checkEnv()
 
 def defaultCliCfgFile():
-    cliFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'userCli.cfg')
-    if os.path.exists(cliFile):
-        return cliFile
+    defaultCliCfgFile = os.path.join(os.environ['PRJ_HOME'], 'bin', os.environ['YASA_SIMULATOR']+'_cfg', 'userCli.cfg')
+    if not os.path.exists(defaultCliCfgFile):
+        raise EnvironmentError('%s file not exists' % defaultCliCfgFile)
     else:
-        COLOR_PRINTER.write("%s doesn't exist!\n" % cliFile, fg='ri')
-        sys.exit(1)
+        return defaultCliCfgFile
 
 def defaultBuildFile():
-    buildFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'build.cfg')
-    if os.path.exists(buildFile):
-        return buildFile
+    defaultBuildFile = os.path.join(os.environ['PRJ_HOME'], 'bin', os.environ['YASA_SIMULATOR']+'_cfg', 'build.cfg')
+    if not os.path.exists(defaultBuildFile):
+        raise EnvironmentError('%s file not exists' % defaultBuildFile)
     else:
-        COLOR_PRINTER.write("%s doesn't exist!\n" % buildFile, fg='ri')
-        sys.exit(1)
+        return defaultBuildFile
 
 def defaultGroupFile():
-    groupFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'group.cfg')
-    if os.path.exists(groupFile):
-        return groupFile 
+    defaultGroupFile = os.path.join(os.environ['PRJ_HOME'], 'bin', os.environ['YASA_SIMULATOR']+'_cfg', 'group.cfg')
+    if not os.path.exists(defaultGroupFile):
+        raise EnvironmentError('%s file not exists' % defaultGroupFile)
     else:
-        COLOR_PRINTER.write("%s doesn't exist!\n" % groupFile, fg='ri')
-        sys.exit(1)
+        return defaultGroupFile
 
 def defaultTestListFile():
     return 'test.f'
@@ -43,7 +42,7 @@ def defaultYasaDir():
     if 'YASA_HOME' in os.environ:
         return os.environ['YASA_HOME']
     else :
-        return os.path.join(os.environ['PRJ_HOME'], 'bin', 'Yasa')
+        return os.path.join(os.environ['PRJ_HOME'], 'bin', 'YASA')
 
 def defautlVplanDir():
     return os.path.join(os.environ['PRJ_HOME'], 'etc', 'vplan')
@@ -70,7 +69,7 @@ def defaultReportDir():
         return os.path.join(defaultWorkPrjDir(), 'report')
 
 def userSimCheck():
-    userSimCheckFile = os.path.join(os.environ['PRJ_HOME'], 'bin', 'userSimCheck.py')
+    userSimCheckFile = os.path.join(os.environ['PRJ_HOME'], 'bin', os.environ['YASA_SIMULATOR']+'_cfg', 'userSimCheck.py')
     if os.path.isfile(userSimCheckFile):
         return ('userSimCheck', userSimCheckFile)
     return (None, None)
@@ -83,4 +82,4 @@ def defaultWorkDir():
     #    return os.path.join('/ic/temp/fe', os.environ['USER'], os.path.basename(os.environ['PRJ_HOME']))
     # else : raise SystemError('You are supposed to be in sg-ic-ipdv, sg-ic-soc, sg-ic-fpga or sg-ic-socdv group, but you are not !')
 
-    return os.path.join(os.environ['PRJ_HOME'], os.path.basename(os.environ['PRJ_HOME']) + '_out')
+    return os.path.join(os.environ['TEMP_ROOT'], os.path.basename(os.environ['PRJ_HOME']))
