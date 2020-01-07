@@ -21,7 +21,7 @@ class waveArgsAction(argparse.Action):
         elif args.wave == 'fsdb':
             appendAttr(args, 'compileOption', '-access +r +define+DUMP_FSDB')
         elif args.wave == 'gui':
-            appendAttr(args, 'compileOption', '-access +rwc +define+DUMP_FSDB')
+            appendAttr(args, 'compileOption', '-access +rwc -line -linedebug +define+DUMP_FSDB')
             appendAttr(args, 'simOption', '-gui')
 
 class covArgsAction(argparse.Action):
