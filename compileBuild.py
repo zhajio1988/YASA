@@ -196,7 +196,7 @@ class compileBuildBase(object):
                         elif self._simulator_if.name in ['irun', 'xrun' ]:
                             f.write('\t' + '-svseed %s' % seed + ' \\' + '\n')
                     if self._args.cov and self._simulator_if.name == 'vcs':
-                            f.write('\t' + '-cm_name %s' % self._args.test + '__' + str(seed) + ' \\' + '\n')
+                        f.write('\t' + '-cm_name %s' % self._args.test + '__' + str(seed) + ' -cm_dir ' + os.path.join(self._buildDir, defaultCovDir()) + ' \\' + '\n')
                     if isGroup:
                         f.write('\t' + item + ' >& /dev/null\n')                        
                     else:
