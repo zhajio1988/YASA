@@ -317,7 +317,10 @@ class groupTestCompile(compileBuildBase):
         self._args.build = self._group.buildOption
         self._testcases = self.groupCfg.getTests(self._args.group)
         self.setTestlist()
-
+        
+    def createBuildDir(self):
+        createDir(self._buildDir, True)
+        
     @property
     def _buildDir(self):
         if self._group.name:
