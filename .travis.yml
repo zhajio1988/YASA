@@ -14,6 +14,7 @@ before_script:
 - touch bin/vcs
 - chmod +x bin/vcs
 - export PATH="./bin":$PATH
+- export TEMP_ROOT=`pwd`
 - source bin/bootenv.sh
 
 # command to run tests
