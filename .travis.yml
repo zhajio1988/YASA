@@ -14,7 +14,7 @@ before_script:
 - touch bin/vcs
 - chmod +x bin/vcs
 - export PATH="./bin":$PATH
-- source bin/bootenv.csh
+- source bin/bootenv.sh
 
 # command to run tests
 script:
